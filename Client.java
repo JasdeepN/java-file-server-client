@@ -17,15 +17,15 @@ import java.awt.event.*;
 
 class Client extends JPanel{
     Socket socket;
-    static String data;
+    static String data = null;
     static boolean exit = false;
     static Scanner scanInput = new Scanner(System.in);
     static String username;
 
     static class Sender extends Thread {
-        DataOutputStream dataOut;
+        static DataOutputStream dataOut;
 
-        
+
         public Sender(DataOutputStream dataOut) {
             this.dataOut = dataOut;
             try {
@@ -38,20 +38,24 @@ class Client extends JPanel{
         }
 
         public void run() {
-            while (true){
+           /* while (true){
                 sendData(); 
-            }
+            }*/
         }
 
-        synchronized public void sendData() {
-            data = scanInput.nextLine();
-            try {
-                dataOut.writeUTF(data);
-                dataOut.flush();
+       static synchronized public void sendData() {
+            //data = scanInput.nextLine();
+            if (data != null){
+                try {
+                    System.out.println("working");
+                    dataOut.writeUTF(data);
+                    dataOut.flush();
+                    data = null;
 
-            } catch(Exception e) {
-                System.err.println("Sender Error");
-                System.exit(0);
+                } catch(Exception e) {
+                    System.err.println("Sender Error");
+                    System.exit(0);
+                }
             }
         }
     }
@@ -65,7 +69,7 @@ class Client extends JPanel{
         }
 
         public void run() {
-            while (exit == false){
+            while (true){
                 reciveData(); 
             }
         }
@@ -111,14 +115,14 @@ class Client extends JPanel{
        // c.connect(); 
 
     }
-}
 
-class MainWindow extends JPanel {
-    int windowWidth = 500;
-    int windowHeight = 350;
 
-    MainWindow(){
-        setLayout(new BorderLayout());
+    static class MainWindow extends JPanel {
+        int windowWidth = 500;
+        int windowHeight = 350;
+
+        MainWindow(){
+            setLayout(new BorderLayout());
 
        /* JFrame loading = new JFrame("loading My.java...please wait");
         JLabel load = new JLabel("loading data...please wait");
@@ -151,8 +155,8 @@ class MainWindow extends JPanel {
 
 
         JTextField sendField = new JTextField("", 20);
-        JTextField ipBox = new JTextField(" enter server IP");
-        JTextField portBox = new JTextField(" enter server port");
+        JTextField ipBox = new JTextField("localhost", 10);
+        JTextField portBox = new JTextField("3000", 5);
 
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -166,9 +170,6 @@ class MainWindow extends JPanel {
         mainPanel.setBackground(Color.GRAY);
         //serverPanel.setBackground(Color.GRAY);
 
-
-      //  serverPanel.add(new visual());
-      // serverPanel.add(new Legend());
         secondaryPanel.add(sendButton);
         secondaryPanel.add(sendField);
         exitPanel.add(exitButton);
@@ -185,6 +186,14 @@ class MainWindow extends JPanel {
         //frame.pack();
         frame.setVisible(true);
         //loading.setVisible(false);
+
+        sendButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("send button");
+                data = (sendField.getText());
+                Sender.sendData();
+            }          
+        }); 
 
         
         exitButton.addActionListener(new ActionListener() {
@@ -209,4 +218,5 @@ class MainWindow extends JPanel {
             }          
         });
     }
+}
 }

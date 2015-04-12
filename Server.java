@@ -21,18 +21,18 @@ class Server {
 
     static class User extends Thread {
         private String Username;
-        private boolean loggedIn = false;
+
         String input = null, msg = null, user = null, currUser = null;
         Pattern name = Pattern.compile(login);
         Pattern mess = Pattern.compile(message);
-        List<String> userMailbox;
+       // List<String> userMailbox;
         DataInputStream dataIn;
         DataOutputStream dataOut; 
 
         public User(DataInputStream in, DataOutputStream out) {
             this.dataIn = in;
             this.dataOut = out;
-            this.userMailbox = new ArrayList<String>();
+            //this.userMailbox = new ArrayList<String>();
             logs.add("\nnew user created");
             System.out.println("Client connected waiting for login...");
             serverLog.put("server", logs);            
@@ -40,7 +40,6 @@ class Server {
 
         synchronized public void setUserName(String username){
             this.Username = username;
-            this.loggedIn = true;
             try {
                 dataOut.writeUTF("logged in as " + this.Username + " type \"cmd\" for a list of commands");
                 dataOut.flush();
@@ -49,92 +48,11 @@ class Server {
                 System.out.println("IOException at set user");
             }
             logs.add("\n" + username + " has logged in a new mailbox has been added to the server");
-            serverLog.put(this.Username, this.userMailbox);
             serverLog.put("server", logs);
         }
 
         synchronized public String getUser(){
             return this.Username;
-        }
-
-        synchronized public void saveMsg(String user, String msg){
-            if(this.loggedIn == true){
-                Iterator it = serverLog.entrySet().iterator();
-                while (it.hasNext()) {
-                    try {
-                        Map.Entry pair = (Map.Entry)it.next();
-                        String reciever = pair.getKey().toString();
-                        @SuppressWarnings("unchecked")
-                        List<String> mailbox = (List<String>)pair.getValue();
-                        if(reciever.compareTo(user) == 0){
-                            mailbox.add(msg);
-                            logs.add("\nmessage added to " + user + "'s mailbox");
-                            this.userMailbox = mailbox;
-                        } 
-                    } catch (NullPointerException n){
-                        System.err.println("throws null pointer at save");
-                    }
-                } 
-                serverLog.put(user, this.userMailbox);
-                logs.add("\n" + user + "'s mailbox saved to server");
-            }
-            else{
-                try{
-                    dataOut.writeUTF("error you need to login first");
-                    dataOut.flush();
-                    logs.add("\nuser did not log in first");
-                } catch(IOException e){
-                    System.out.println("IOException at save message");
-                }
-            }
-            serverLog.put("server", logs);
-        }
-
-        synchronized public void getMsg(String user){
-            if(this.loggedIn == true){
-                try {
-                    dataOut.writeUTF("----Messages----");
-                    dataOut.flush();
-                    Iterator it = serverLog.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry)it.next();
-                        String reciever = pair.getKey().toString();
-                        @SuppressWarnings("unchecked")
-                        List<String> messages = (List<String>)pair.getValue();
-                        if(reciever.compareTo(user) == 0){
-                            if (messages.isEmpty()){
-                                dataOut.writeUTF("No messages for this user");
-                                dataOut.flush();
-                            } else {
-                                dataOut.writeUTF(messages.toString());
-                                dataOut.flush();
-                                messages.clear();
-                                serverLog.put(user, messages);
-                                logs.add("\nmessages retrived for " + user + ", mailbox is now empty");
-                            }
-                        } 
-                    } 
-                } catch (IOException ex){
-                    System.err.println("IO ERROR GETTING MESSAGES");
-                }
-            } else {
-                try{
-                    dataOut.writeUTF("error you need to login first");
-                    dataOut.flush();
-                    logs.add("\nuser did not log in first");
-                } catch(IOException e){
-                    System.out.println("IOException at get message");
-                }
-            }
-            serverLog.put("server", logs);
-        }
-
-        synchronized public void userDisconect(){
-            try{
-                main.close();
-            } catch (IOException e){
-                System.err.println("error closing socket on disconect");
-            }
         }
 
         synchronized private void printServerStatus (){
@@ -146,17 +64,6 @@ class Server {
                     String message = pair.getValue().toString();
                     System.out.println(message);
                 }
-            }
-        }
-
-        synchronized public void PrintMap (Map x){
-            Iterator it = x.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                String reciever = pair.getKey().toString();
-                String message = pair.getValue().toString();
-                System.out.println("Key " + reciever);
-                System.out.println("msg " + message);
             }
         }
 
@@ -181,19 +88,15 @@ class Server {
 
                     switch (input) {
                         case "exit": 
-                        userDisconect();
                         break;
 
                         case "login":
-                        setUserName(currUser);                            
                         break;
 
                         case "send":
-                        saveMsg(user, msg);
                         break;
 
                         case "fetch":
-                        getMsg(this.getUser());
                         break;
 
                         case "log":
