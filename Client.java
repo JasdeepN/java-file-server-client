@@ -43,45 +43,44 @@ class Client extends JPanel{
             }*/
         }
 
-       static synchronized public void sendData() {
-            //data = scanInput.nextLine();
-           
-                try {
-                    System.out.println("working");
-                    dataOut.writeUTF(data);
-                    dataOut.flush();
-                    data = null;
+        static synchronized public void sendData() {        
+            try {
+                dataOut.writeUTF(data);
+                dataOut.flush();
+                data = null;
 
-                } catch(Exception e) {
-                    System.err.println("Sender Error");
-                    System.exit(0);
-                }
+            } catch(Exception e) {
+                System.err.println("Sender Error");
+                System.exit(0);
+            }
             
         }
     }
 
     static class Receiver extends Thread {
-        DataInputStream dataIn;
-        String returnData = null;
+        static DataInputStream dataIn;
+        static String returnData = null;
 
         public Receiver(DataInputStream dataIn) {
             this.dataIn = dataIn;
         }
 
         public void run() {
-            while (true){
-                reciveData(); 
-            }
+
         }
 
-        synchronized public void reciveData(){
+        static synchronized public void reciveData(){
             try {
                 returnData = dataIn.readUTF();
-                System.out.println(returnData);
-            } catch(Exception e) {
+                if (returnData != null){
+                    System.out.println(returnData);
+                } else {
+                    System.out.println("wating for server response...");
+                }
+            }catch(Exception e) {
                 System.err.println("server has disconnected");
                 System.exit(0);
-            }
+            } 
         }
     }
 
@@ -102,10 +101,10 @@ class Client extends JPanel{
         Thread receiver = new Receiver(dataIn);
 
         sender.start();
-        //receiver.start();
+        receiver.start();
 
         sender.join();
-        //receiver.join();
+        receiver.join();
     }
 
     public static void main(String[] args) throws Exception {
@@ -152,6 +151,8 @@ class Client extends JPanel{
         JButton exitButton = new JButton("QUIT PROGRAM"); 
         JButton serverConnect = new JButton("CONNECT TO SERVER");
         JButton sendButton = new JButton("SEND");
+        JButton updateButton = new JButton("UPDATE FROM SERVER");
+
 
 
         JTextField sendField = new JTextField("", 20);
@@ -172,6 +173,7 @@ class Client extends JPanel{
 
         secondaryPanel.add(sendButton);
         secondaryPanel.add(sendField);
+        secondaryPanel.add(updateButton);
         exitPanel.add(exitButton);
         serverPanel.add(serverConnect);
         serverPanel.add(ipBox);
@@ -189,9 +191,14 @@ class Client extends JPanel{
 
         sendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("send button");
                 data = (sendField.getText());
                 Sender.sendData();
+            }          
+        }); 
+
+        updateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Receiver.reciveData();
             }          
         }); 
 
@@ -199,6 +206,8 @@ class Client extends JPanel{
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("exit button clicked");
+                data = "exit";
+                Sender.sendData();
                 System.exit(0);
             }          
         }); 
@@ -217,6 +226,7 @@ class Client extends JPanel{
                 }
             }          
         });
+
     }
 }
 }
