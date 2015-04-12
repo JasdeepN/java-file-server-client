@@ -11,6 +11,8 @@ import java.awt.GridLayout;
 import javax.swing.JFrame;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
+import java.awt.*;
+import java.awt.event.*;
 
 
 class Client extends JPanel{
@@ -112,13 +114,13 @@ class Client extends JPanel{
 }
 
 class MainWindow extends JPanel {
-       int windowWidth = 820;
+    int windowWidth = 500;
     int windowHeight = 350;
 
     MainWindow(){
-            setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
 
-        JFrame loading = new JFrame("loading My.java...please wait");
+       /* JFrame loading = new JFrame("loading My.java...please wait");
         JLabel load = new JLabel("loading data...please wait");
         JLabel blank = new JLabel(" ");
         JPanel loadPanel = new JPanel(new GridLayout(0, 3));
@@ -133,7 +135,7 @@ class MainWindow extends JPanel {
         loadPanel.add(blank);
         loadPanel.add(load);
         loading.add(loadPanel, BorderLayout.CENTER);
-        loading.setVisible(true);
+        loading.setVisible(true); */
 
         JFrame frame = new JFrame("My.java");
 
@@ -143,18 +145,28 @@ class MainWindow extends JPanel {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
+        JButton exitButton = new JButton("QUIT PROGRAM"); 
+
+        exitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("exit button clicked");
+                System.exit(0);
+            }          
+        }); 
+
         JPanel panel1 = new JPanel(new BorderLayout());
         JPanel panel2 = new JPanel(new GridLayout(1, 1));
-        JPanel panel3 = new JPanel();
+
         JLabel space = new JLabel("mine ");
         JLabel space2 = new JLabel("mine2 ");
 
         panel1.setBackground(Color.GRAY);
         panel2.setBackground(Color.GRAY);
-        panel3.setBackground(Color.GRAY);
+
 
       //  panel2.add(new visual());
       // panel2.add(new Legend());
+        panel2.add(exitButton);
 
         panel1.add(panel2, BorderLayout.CENTER);
 
@@ -162,6 +174,6 @@ class MainWindow extends JPanel {
 
         //frame.pack();
         frame.setVisible(true);
-        loading.setVisible(false);
+        //loading.setVisible(false);
     }
 }
