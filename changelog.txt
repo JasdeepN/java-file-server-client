@@ -1,0 +1,24 @@
+v1.1.6
+recieve data kinda works only does line by line and if you go over it stops waiting for the server to send data that it cant
+
+v1.1.5
+Client can now send data to server and connect without freezing
+cannot recieve data back from server as of this build
+
+v.1.1.4
+server does not connect properly (it connects the GUI freezes however)
+
+v1.1.3
+added send button does nothing right now
+
+1.1.2
+server connect button added takes imput from 2 text fields
+
+v1.1.1
+exit button implemented
+
+v1.1
+added basic gui no actual functions implemented yet
+
+v1.0 
+using assignment 5 as base v1.0
