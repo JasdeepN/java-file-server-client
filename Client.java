@@ -147,38 +147,40 @@ class MainWindow extends JPanel {
 
         JButton exitButton = new JButton("QUIT PROGRAM"); 
         JButton serverConnect = new JButton("CONNECT TO SERVER");
+        JButton sendButton = new JButton("SEND");
 
 
+        JTextField sendField = new JTextField("", 20);
         JTextField ipBox = new JTextField(" enter server IP");
         JTextField portBox = new JTextField(" enter server port");
 
 
-        JPanel panel1 = new JPanel(new BorderLayout());
+        JPanel mainPanel = new JPanel(new BorderLayout());
        // JPanel panel2 = new JPanel(new GridLayout(1, 3));
         JPanel serverPanel = new JPanel(new FlowLayout());
+        JPanel secondaryPanel = new JPanel (new FlowLayout());
+        JPanel exitPanel = new JPanel(new FlowLayout());
 
-        JPanel panel3 = new JPanel(new FlowLayout());
 
 
-        JLabel space = new JLabel("mine ");
-        JLabel space2 = new JLabel("mine2 ");
-
-        panel1.setBackground(Color.GRAY);
-        serverPanel.setBackground(Color.GRAY);
+        mainPanel.setBackground(Color.GRAY);
+        //serverPanel.setBackground(Color.GRAY);
 
 
       //  serverPanel.add(new visual());
       // serverPanel.add(new Legend());
-        panel3.add(exitButton);
+        secondaryPanel.add(sendButton);
+        secondaryPanel.add(sendField);
+        exitPanel.add(exitButton);
         serverPanel.add(serverConnect);
         serverPanel.add(ipBox);
         serverPanel.add(portBox);
 
+        mainPanel.add(secondaryPanel, BorderLayout.CENTER);
+        mainPanel.add(exitPanel, BorderLayout.SOUTH);
+        mainPanel.add(serverPanel, BorderLayout.NORTH);
 
-        panel1.add(panel3, BorderLayout.SOUTH);
-        panel1.add(serverPanel, BorderLayout.NORTH);
-
-        frame.add(panel1, BorderLayout.CENTER);
+        frame.add(mainPanel, BorderLayout.CENTER);
 
         //frame.pack();
         frame.setVisible(true);
