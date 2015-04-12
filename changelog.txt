@@ -11,7 +11,7 @@ server does not connect properly (it connects the GUI freezes however)
 v1.1.3
 added send button does nothing right now
 
-1.1.2
+v1.1.2
 server connect button added takes imput from 2 text fields
 
 v1.1.1
