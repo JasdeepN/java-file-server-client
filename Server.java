@@ -25,14 +25,12 @@ class Server {
         String input = null, msg = null, user = null, currUser = null;
         Pattern name = Pattern.compile(login);
         Pattern mess = Pattern.compile(message);
-       // List<String> userMailbox;
         DataInputStream dataIn;
         DataOutputStream dataOut; 
 
         public User(DataInputStream in, DataOutputStream out) {
             this.dataIn = in;
             this.dataOut = out;
-            //this.userMailbox = new ArrayList<String>();
             logs.add("\nnew user created");
             System.out.println("Client connected waiting for login...");
             serverLog.put("server", logs);            
@@ -88,9 +86,11 @@ class Server {
 
                     switch (input) {
                         case "exit": 
+                        System.exit(0);
                         break;
 
                         case "login":
+                        setUserName(currUser);                            
                         break;
 
                         case "send":

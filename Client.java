@@ -17,7 +17,7 @@ import java.awt.event.*;
 
 class Client extends JPanel{
     Socket socket;
-    static String data = null;
+    static String data;
     static boolean exit = false;
     static Scanner scanInput = new Scanner(System.in);
     static String username;
@@ -45,7 +45,7 @@ class Client extends JPanel{
 
        static synchronized public void sendData() {
             //data = scanInput.nextLine();
-            if (data != null){
+           
                 try {
                     System.out.println("working");
                     dataOut.writeUTF(data);
@@ -56,7 +56,7 @@ class Client extends JPanel{
                     System.err.println("Sender Error");
                     System.exit(0);
                 }
-            }
+            
         }
     }
 
@@ -102,10 +102,10 @@ class Client extends JPanel{
         Thread receiver = new Receiver(dataIn);
 
         sender.start();
-        receiver.start();
+        //receiver.start();
 
         sender.join();
-        receiver.join();
+        //receiver.join();
     }
 
     public static void main(String[] args) throws Exception {
