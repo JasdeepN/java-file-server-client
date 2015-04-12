@@ -1,3 +1,6 @@
+v1.1.7
+recieve data works correctly prints to terminal currently
+
 v1.1.6
 recieve data kinda works only does line by line and if you go over it stops waiting for the server to send data that it cant
 

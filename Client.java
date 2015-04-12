@@ -18,7 +18,7 @@ import java.awt.event.*;
 class Client extends JPanel{
     Socket socket;
     static String data;
-    static boolean exit = false;
+    static boolean keepCheck = false;
     static Scanner scanInput = new Scanner(System.in);
     static String username;
 
@@ -38,9 +38,7 @@ class Client extends JPanel{
         }
 
         public void run() {
-           /* while (true){
-                sendData(); 
-            }*/
+
         }
 
         static synchronized public void sendData() {        
@@ -51,7 +49,6 @@ class Client extends JPanel{
 
             } catch(Exception e) {
                 System.err.println("Sender Error");
-                System.exit(0);
             }
             
         }
@@ -66,24 +63,22 @@ class Client extends JPanel{
         }
 
         public void run() {
-
+            while (true){
+                reciveData();
+            }
         }
 
         static synchronized public void reciveData(){
             try {
                 returnData = dataIn.readUTF();
-                if (returnData != null){
-                    System.out.println(returnData);
-                } else {
-                    System.out.println("wating for server response...");
-                }
-            }catch(Exception e) {
+                System.out.println(returnData);
+            } catch(Exception e) {
                 System.err.println("server has disconnected");
                 System.exit(0);
             } 
         }
     }
-
+    
 
     public Client(String hostname, int port, String user) throws Exception {
         this.socket = new Socket(hostname, port);
@@ -95,6 +90,7 @@ class Client extends JPanel{
         OutputStream out = this.socket.getOutputStream();
         DataInputStream dataIn = new DataInputStream(in);
         DataOutputStream dataOut = new DataOutputStream(out);
+        //BufferedReader dataIn = new BufferedReader(new InputStreamReader(in));
 
         // Handle the connection
         Thread sender = new Sender(dataOut);
@@ -104,7 +100,7 @@ class Client extends JPanel{
         receiver.start();
 
         sender.join();
-        receiver.join();
+        //receiver.join();
     }
 
     public static void main(String[] args) throws Exception {
@@ -197,15 +193,15 @@ class Client extends JPanel{
         }); 
 
         updateButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Receiver.reciveData();
-            }          
-        }); 
+            public void actionPerformed(ActionEvent e){
+               // Receiver.reciveData();
+        }          
+    }); 
 
         
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("exit button clicked");
+               // System.out.println("exit button clicked");
                 data = "exit";
                 Sender.sendData();
                 System.exit(0);
@@ -214,7 +210,7 @@ class Client extends JPanel{
 
         serverConnect.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("SERVER CONNECT");
+               // System.out.println("SERVER CONNECT");
                 String ip = ipBox.getText();
                 String strPort = portBox.getText();
                 int intPort = Integer.parseInt(strPort);
