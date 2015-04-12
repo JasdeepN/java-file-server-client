@@ -1,9 +1,19 @@
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import javax.swing.*;
+import java.awt.Graphics;
+import java.util.*;
+import java.awt.GridLayout;
+import javax.swing.JFrame;
+import java.awt.geom.GeneralPath;
+import java.util.ArrayList;
 
 
-class Client {
+class Client extends JPanel{
     Socket socket;
     static String data;
     static boolean exit = false;
@@ -93,9 +103,65 @@ class Client {
     }
 
     public static void main(String[] args) throws Exception {
+        MainWindow main = new MainWindow();
+        //move into window
+       // Client c = new Client(args[0], Integer.valueOf(args[1]), args[2]);
+       // c.connect(); 
 
-        Client c = new Client(args[0], Integer.valueOf(args[1]), args[2]);
-        c.connect(); 
+    }
+}
 
+class MainWindow extends JPanel {
+       int windowWidth = 820;
+    int windowHeight = 350;
+
+    MainWindow(){
+            setLayout(new BorderLayout());
+
+        JFrame loading = new JFrame("loading My.java...please wait");
+        JLabel load = new JLabel("loading data...please wait");
+        JLabel blank = new JLabel(" ");
+        JPanel loadPanel = new JPanel(new GridLayout(0, 3));
+        loadPanel.setBackground(Color.GRAY);
+
+        loading.setLayout(new BorderLayout(windowWidth, windowHeight));
+        loading.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loading.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
+        loading.setLocationRelativeTo(null);
+        loading.setResizable(false);
+
+        loadPanel.add(blank);
+        loadPanel.add(load);
+        loading.add(loadPanel, BorderLayout.CENTER);
+        loading.setVisible(true);
+
+        JFrame frame = new JFrame("My.java");
+
+        frame.setLayout(new BorderLayout(windowWidth, windowHeight));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
+
+        JPanel panel1 = new JPanel(new BorderLayout());
+        JPanel panel2 = new JPanel(new GridLayout(1, 1));
+        JPanel panel3 = new JPanel();
+        JLabel space = new JLabel("mine ");
+        JLabel space2 = new JLabel("mine2 ");
+
+        panel1.setBackground(Color.GRAY);
+        panel2.setBackground(Color.GRAY);
+        panel3.setBackground(Color.GRAY);
+
+      //  panel2.add(new visual());
+      // panel2.add(new Legend());
+
+        panel1.add(panel2, BorderLayout.CENTER);
+
+        frame.add(panel1, BorderLayout.CENTER);
+
+        //frame.pack();
+        frame.setVisible(true);
+        loading.setVisible(false);
     }
 }
