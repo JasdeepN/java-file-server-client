@@ -137,7 +137,7 @@ class MainWindow extends JPanel {
         loading.add(loadPanel, BorderLayout.CENTER);
         loading.setVisible(true); */
 
-        JFrame frame = new JFrame("My.java");
+        JFrame frame = new JFrame("TEST BUILD");
 
         frame.setLayout(new BorderLayout(windowWidth, windowHeight));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -146,7 +146,45 @@ class MainWindow extends JPanel {
         frame.setResizable(false);
 
         JButton exitButton = new JButton("QUIT PROGRAM"); 
+        JButton serverConnect = new JButton("CONNECT TO SERVER");
 
+
+        JTextField ipBox = new JTextField(" enter server IP");
+        JTextField portBox = new JTextField(" enter server port");
+
+
+        JPanel panel1 = new JPanel(new BorderLayout());
+       // JPanel panel2 = new JPanel(new GridLayout(1, 3));
+        JPanel serverPanel = new JPanel(new FlowLayout());
+
+        JPanel panel3 = new JPanel(new FlowLayout());
+
+
+        JLabel space = new JLabel("mine ");
+        JLabel space2 = new JLabel("mine2 ");
+
+        panel1.setBackground(Color.GRAY);
+        serverPanel.setBackground(Color.GRAY);
+
+
+      //  serverPanel.add(new visual());
+      // serverPanel.add(new Legend());
+        panel3.add(exitButton);
+        serverPanel.add(serverConnect);
+        serverPanel.add(ipBox);
+        serverPanel.add(portBox);
+
+
+        panel1.add(panel3, BorderLayout.SOUTH);
+        panel1.add(serverPanel, BorderLayout.NORTH);
+
+        frame.add(panel1, BorderLayout.CENTER);
+
+        //frame.pack();
+        frame.setVisible(true);
+        //loading.setVisible(false);
+
+        
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("exit button clicked");
@@ -154,26 +192,19 @@ class MainWindow extends JPanel {
             }          
         }); 
 
-        JPanel panel1 = new JPanel(new BorderLayout());
-        JPanel panel2 = new JPanel(new GridLayout(1, 1));
-
-        JLabel space = new JLabel("mine ");
-        JLabel space2 = new JLabel("mine2 ");
-
-        panel1.setBackground(Color.GRAY);
-        panel2.setBackground(Color.GRAY);
-
-
-      //  panel2.add(new visual());
-      // panel2.add(new Legend());
-        panel2.add(exitButton);
-
-        panel1.add(panel2, BorderLayout.CENTER);
-
-        frame.add(panel1, BorderLayout.CENTER);
-
-        //frame.pack();
-        frame.setVisible(true);
-        //loading.setVisible(false);
+        serverConnect.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("SERVER CONNECT");
+                String ip = ipBox.getText();
+                String strPort = portBox.getText();
+                int intPort = Integer.parseInt(strPort);
+                try {
+                    Client c = new Client(ip, intPort, "test client");
+                    c.connect(); 
+                } catch (Exception x){
+                    System.err.println("error connecting to server");
+                }
+            }          
+        });
     }
 }
