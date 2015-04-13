@@ -1,3 +1,6 @@
+v1.1.8
+added new window for results
+
 v1.1.7
 recieve data works correctly prints to terminal currently
 

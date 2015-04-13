@@ -4,7 +4,7 @@ import java.util.regex.*;
 import java.util.*;
 
 
-class Server extends Thread{
+class Server{
     //server has access
     static ServerSocket main;  
     static Map<String, List<String>> serverLog = new HashMap<String, List<String>>();
@@ -145,8 +145,7 @@ class Server extends Thread{
         public static void main(String[] args) throws Exception {
             try{
                 Server s = new Server(Integer.valueOf(args[0]));
-                s.start();
-                s.join();
+                
                 System.out.println("Waiting for input...");
                 s.serve();
             }catch (Exception e){

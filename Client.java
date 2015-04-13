@@ -21,6 +21,7 @@ class Client extends JPanel{
     static boolean keepCheck = false;
     static Scanner scanInput = new Scanner(System.in);
     static String username;
+    static results r;
 
     static class Sender extends Thread {
         static DataOutputStream dataOut;
@@ -63,6 +64,7 @@ class Client extends JPanel{
         }
 
         public void run() {
+            r = new results();
             while (true){
                 reciveData();
             }
@@ -72,6 +74,8 @@ class Client extends JPanel{
             try {
                 returnData = dataIn.readUTF();
                 System.out.println(returnData);
+                
+
             } catch(Exception e) {
                 System.err.println("server has disconnected");
                 System.exit(0);
@@ -100,7 +104,7 @@ class Client extends JPanel{
         receiver.start();
 
         sender.join();
-        //receiver.join();
+        //receiver.join(); //not joining the reviever 
     }
 
     public static void main(String[] args) throws Exception {
@@ -115,9 +119,6 @@ class Client extends JPanel{
     static class MainWindow extends JPanel {
         int windowWidth = 500;
         int windowHeight = 350;
-
-        MainWindow(){
-            setLayout(new BorderLayout());
 
        /* JFrame loading = new JFrame("loading My.java...please wait");
         JLabel load = new JLabel("loading data...please wait");
@@ -135,94 +136,135 @@ class Client extends JPanel{
         loadPanel.add(load);
         loading.add(loadPanel, BorderLayout.CENTER);
         loading.setVisible(true); */
-
         JFrame frame = new JFrame("TEST BUILD");
-
-        frame.setLayout(new BorderLayout(windowWidth, windowHeight));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-
-        JButton exitButton = new JButton("QUIT PROGRAM"); 
-        JButton serverConnect = new JButton("CONNECT TO SERVER");
-        JButton sendButton = new JButton("SEND");
-        JButton updateButton = new JButton("UPDATE FROM SERVER");
-
-
-
-        JTextField sendField = new JTextField("", 20);
-        JTextField ipBox = new JTextField("localhost", 10);
-        JTextField portBox = new JTextField("3000", 5);
-
-
+        
         JPanel mainPanel = new JPanel(new BorderLayout());
        // JPanel panel2 = new JPanel(new GridLayout(1, 3));
         JPanel serverPanel = new JPanel(new FlowLayout());
-        JPanel secondaryPanel = new JPanel (new FlowLayout());
+        JPanel sendPanel = new JPanel (new FlowLayout());
         JPanel exitPanel = new JPanel(new FlowLayout());
+        JPanel secondaryPanel = new JPanel(new BorderLayout());
+        JPanel dataPanel = new JPanel(new FlowLayout());
+
+        MainWindow(){
+            setLayout(new BorderLayout());
 
 
 
-        mainPanel.setBackground(Color.GRAY);
-        //serverPanel.setBackground(Color.GRAY);
 
-        secondaryPanel.add(sendButton);
-        secondaryPanel.add(sendField);
-        secondaryPanel.add(updateButton);
-        exitPanel.add(exitButton);
-        serverPanel.add(serverConnect);
-        serverPanel.add(ipBox);
-        serverPanel.add(portBox);
+            frame.setLayout(new BorderLayout(windowWidth, windowHeight));
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
+            frame.setLocationRelativeTo(null);
+            frame.setResizable(false);
 
-        mainPanel.add(secondaryPanel, BorderLayout.CENTER);
-        mainPanel.add(exitPanel, BorderLayout.SOUTH);
-        mainPanel.add(serverPanel, BorderLayout.NORTH);
+            JButton exitButton = new JButton("QUIT PROGRAM"); 
+            JButton serverConnect = new JButton("CONNECT TO SERVER");
+            JButton sendButton = new JButton("SEND");
+            JButton updateButton = new JButton("UPDATE FROM SERVER");
 
-        frame.add(mainPanel, BorderLayout.CENTER);
+
+
+            JTextField sendField = new JTextField("", 20);
+            JTextField ipBox = new JTextField("localhost", 10);
+            JTextField portBox = new JTextField("3000", 5);
+
+
+
+
+
+            mainPanel.setBackground(Color.GRAY);
+            serverPanel.setBackground(Color.GRAY);
+            sendPanel.setBackground(Color.GRAY);
+            exitPanel.setBackground(Color.GRAY);
+
+
+            JLabel reserved = new JLabel("reserved");
+
+            dataPanel.add(reserved);
+
+
+            sendPanel.add(sendButton);
+            sendPanel.add(sendField);
+            sendPanel.add(updateButton);
+            exitPanel.add(exitButton);
+            serverPanel.add(serverConnect);
+            serverPanel.add(ipBox);
+            serverPanel.add(portBox);
+            secondaryPanel.add(sendPanel, BorderLayout.NORTH);
+            secondaryPanel.add(dataPanel, BorderLayout.CENTER);
+
+            mainPanel.add(secondaryPanel, BorderLayout.CENTER);
+            mainPanel.add(exitPanel, BorderLayout.SOUTH);
+            mainPanel.add(serverPanel, BorderLayout.NORTH);
+
+            frame.add(mainPanel, BorderLayout.CENTER);
 
         //frame.pack();
-        frame.setVisible(true);
+            frame.setVisible(true);
         //loading.setVisible(false);
 
-        sendButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                data = (sendField.getText());
-                Sender.sendData();
-            }          
-        }); 
+            sendButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    data = (sendField.getText());
+                    Sender.sendData();
+                }          
+            }); 
 
-        updateButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e){
-               // Receiver.reciveData();
-        }          
-    }); 
+            updateButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e){
+                    resultWindow r = new resultWindow();
+                }          
+            }); 
 
-        
-        exitButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+
+            exitButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
                // System.out.println("exit button clicked");
-                data = "exit";
-                Sender.sendData();
-                System.exit(0);
-            }          
-        }); 
+                    data = "exit";
+                    Sender.sendData();
+                    System.exit(0);
+                }          
+            }); 
 
-        serverConnect.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            serverConnect.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
                // System.out.println("SERVER CONNECT");
-                String ip = ipBox.getText();
-                String strPort = portBox.getText();
-                int intPort = Integer.parseInt(strPort);
-                try {
-                    Client c = new Client(ip, intPort, "test client");
-                    c.connect(); 
-                } catch (Exception x){
-                    System.err.println("error connecting to server");
-                }
-            }          
-        });
+                    String ip = ipBox.getText();
+                    String strPort = portBox.getText();
+                    int intPort = Integer.parseInt(strPort);
+                    try {
+                        Client c = new Client(ip, intPort, "test client");
+                        c.connect(); 
+                    } catch (Exception x){
+                        System.err.println("error connecting to server");
+                    }
+                }          
+            });
 
+        }
+
+        static class resultWindow extends JPanel {
+            int windowWidth = 500;
+            int windowHeight = 350;
+            JFrame frame = new JFrame("TEST BUILD");
+
+            JPanel mainPanel = new JPanel(new BorderLayout());
+
+            resultWindow(){
+                setLayout(new BorderLayout());
+
+                frame.setLayout(new BorderLayout(windowWidth, windowHeight));
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
+                frame.setLocationRelativeTo(null);
+                frame.setResizable(false);
+
+                mainPanel.setBackground(Color.GRAY);
+                frame.add(mainPanel, BorderLayout.CENTER);
+
+                frame.setVisible(true);
+            }
+        }
     }
-}
 }
