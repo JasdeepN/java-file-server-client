@@ -2,6 +2,8 @@ import java.io.*;
 import java.net.*;
 import java.util.regex.*;
 import java.util.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 class Server{
@@ -13,6 +15,9 @@ class Server{
     static String file = "(sendfile)\\s+(.*)";
 
     static List<String> logs = new ArrayList<String>();
+
+    static DataInputStream serverDataIn;
+
 
     //variables below do not have access
     public Server(int port) throws Exception {
@@ -36,6 +41,7 @@ class Server{
         public User(DataInputStream in, DataOutputStream out) {
             this.dataIn = in;
             this.dataOut = out;
+            serverDataIn = in;
             logs.add("\nnew user created");
             System.out.println("Client connected waiting for login...");
             serverLog.put("server", logs);            
@@ -111,12 +117,13 @@ class Server{
                         break;
 
                         case "sendfile":
-                        try {
+                        recieveFile();
+                       /* try {
                             dataOut.writeUTF(filePath);
                             dataOut.flush();
                         } catch(IOException e){
                             System.out.println("IOException at sendfile on server");
-                        }
+                        }*/
                         break;
 
                         case "log":
@@ -144,6 +151,22 @@ class Server{
                         System.exit(0);
                     }
                 }
+            }
+        }
+
+        static synchronized public void recieveFile(){
+            try{
+                byte[] bytes = new byte[1024];
+                Path currentRelativePath = Paths.get("");
+                String s = currentRelativePath.toAbsolutePath().toString();
+
+                serverDataIn.read(bytes);
+                System.out.println(bytes);
+
+                FileOutputStream fos = new FileOutputStream(s + "\\recieved_file.txt");
+                fos.write(bytes);
+            }catch (Exception ex){
+                System.err.println("error saving file");
             }
         }
 

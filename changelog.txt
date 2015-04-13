@@ -1,3 +1,13 @@
+to be added:
+send file to server - partialy done
+server saves a local file
+server uses local file to parse data
+server recieves command and returns appropriate sata
+client uses data to make visualizations
+
+v1.1.11
+began implementing send file funtion
+
 v1.1.10
 added send file button
 

@@ -13,6 +13,8 @@ import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 class Client extends JPanel{
@@ -165,7 +167,7 @@ class Client extends JPanel{
             JTextField sendField = new JTextField("", 20);
             JTextField ipBox = new JTextField("localhost", 10);
             JTextField portBox = new JTextField("3000", 5);
-            JTextField fileField = new JTextField("", 25);
+            JTextField fileField = new JTextField("~/git/csci2020u/final/test.txt", 25);
 
 
             mainPanel.setBackground(Color.GRAY);
@@ -232,7 +234,7 @@ class Client extends JPanel{
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("send file button clicked");
                     data = "sendfile " + (fileField.getText());
-                    Sender.sendData();
+                    sendFile(fileField.getText());
                 }          
             }); 
 
@@ -251,6 +253,30 @@ class Client extends JPanel{
                 }          
             });
 
+        }
+
+        public void sendFile(String filePath) {
+            try{
+                File file = new File(filePath);
+        //InputStream is = new FileInputStream(file);
+        // Get the size of the file
+                long length = file.length();
+                if (length > Integer.MAX_VALUE) {
+                    System.out.println("File is too large.");
+                }
+                byte[] bytes = new byte[(int) length];
+                FileInputStream fis = new FileInputStream(file);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                BufferedOutputStream out = new BufferedOutputStream(Sender.dataOut);
+
+                int count;
+
+                while ((count = bis.read(bytes)) > 0) {
+                    out.write(bytes, 0, count);
+                }
+            }catch(Exception ex){
+                System.err.println("error sending file");
+            }
         }
 
         static class resultWindow extends JPanel {
