@@ -232,7 +232,7 @@ class Client extends JPanel{
             sendFileButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("send file button clicked");
-                    data = "sendfile " + (fileField.getText());
+                    data = "sendfile";
                     Sender.sendData();
                     sendFile(fileField.getText());
                 }          
@@ -255,8 +255,7 @@ class Client extends JPanel{
 
         }
 
-        public void sendFile(String filePath) {
-            System.out.println("send start");
+        synchronized public void sendFile(String filePath) {
             try{
                 try{
                     File myFile = new File(filePath);
@@ -264,21 +263,18 @@ class Client extends JPanel{
 
                     FileInputStream fis = new FileInputStream(myFile);
                     BufferedInputStream bis = new BufferedInputStream(fis);
-        //bis.read(mybytearray, 0, mybytearray.length);
 
                     DataInputStream dis = new DataInputStream(bis);   
                     dis.readFully(mybytearray, 0, mybytearray.length);
 
                     OutputStream os = socket.getOutputStream();
 
-        //Sending file name and file size to the server
                     DataOutputStream dos = new DataOutputStream(os);   
                     dos.writeUTF(myFile.getName());   
                     dos.writeLong(mybytearray.length);   
                     dos.write(mybytearray, 0, mybytearray.length);   
                     dos.flush();
 
-        //Sending file data to the server
                     os.write(mybytearray, 0, mybytearray.length);
                     os.flush();
 
@@ -287,9 +283,7 @@ class Client extends JPanel{
                 }
             }catch(IOException ex2){
                 System.err.println("IOException at recieve file");
-            }
-            System.out.println("send end");
-            
+            }            
         }
 
 

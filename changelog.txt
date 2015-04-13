@@ -1,8 +1,10 @@
 to be added:
-server saves a local file
 server uses local file to parse data
 server recieves command and returns appropriate sata
 client uses data to make visualizations
+
+v1.1.13
+server saves its own copy of the sent file in a folder labeled server_data
 
 v1.1.12
 client can now send files to server (server makes a copy for its own use leaving the original intact)

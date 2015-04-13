@@ -142,7 +142,7 @@ class Server{
                             break;
 
                             default:
-                            dataOut.writeUTF("Invalid Input");
+                            dataOut.writeUTF("Invalid Input use <cmd> to see a list of commands");
                             dataOut.flush();
                             break;
                         }
@@ -157,11 +157,10 @@ class Server{
         static synchronized public void recieveFile(){
             int bytesRead;
             int current = 0;
-            System.out.println("recieve start");
             try{
                 try{
                     String fileName = "recieved_" + serverDataIn.readUTF();
-                    OutputStream output = new FileOutputStream(fileName);
+                    OutputStream output = new FileOutputStream("server_data/"+fileName);
                     long size = serverDataIn.readLong();
                     byte[] buffer = new byte[1024];
                     while (size > 0 && (bytesRead = serverDataIn.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1)
@@ -175,7 +174,6 @@ class Server{
             }catch(IOException ex2){
                 System.err.println("IOException at recieve file");
             }
-            System.out.println("recieve end");
         }
 
         public void serve() throws Exception {
