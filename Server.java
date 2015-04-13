@@ -155,19 +155,27 @@ class Server{
         }
 
         static synchronized public void recieveFile(){
+            int bytesRead;
+            int current = 0;
+            System.out.println("recieve start");
             try{
-                byte[] bytes = new byte[1024];
-                Path currentRelativePath = Paths.get("");
-                String s = currentRelativePath.toAbsolutePath().toString();
-
-                serverDataIn.read(bytes);
-                System.out.println(bytes);
-
-                FileOutputStream fos = new FileOutputStream(s + "\\recieved_file.txt");
-                fos.write(bytes);
-            }catch (Exception ex){
-                System.err.println("error saving file");
+                try{
+                    String fileName = "recieved_" + serverDataIn.readUTF();
+                    OutputStream output = new FileOutputStream(fileName);
+                    long size = serverDataIn.readLong();
+                    byte[] buffer = new byte[1024];
+                    while (size > 0 && (bytesRead = serverDataIn.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1)
+                    {
+                        output.write(buffer, 0, bytesRead);
+                        size -= bytesRead;
+                    }
+                }catch (FileNotFoundException ex){
+                    System.err.println("file not found");
+                }
+            }catch(IOException ex2){
+                System.err.println("IOException at recieve file");
             }
+            System.out.println("recieve end");
         }
 
         public void serve() throws Exception {
@@ -188,7 +196,7 @@ class Server{
         public static void main(String[] args) throws Exception {
             try{
                 Server s = new Server(Integer.valueOf(args[0]));
-                
+
                 System.out.println("Waiting for input...");
                 s.serve();
             }catch (Exception e){

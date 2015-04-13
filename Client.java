@@ -18,9 +18,8 @@ import java.nio.file.Paths;
 
 
 class Client extends JPanel{
-    Socket socket;
+    static Socket socket;
     static String data;
-    static boolean keepCheck = false;
     static Scanner scanInput = new Scanner(System.in);
     static String username;
 
@@ -167,7 +166,7 @@ class Client extends JPanel{
             JTextField sendField = new JTextField("", 20);
             JTextField ipBox = new JTextField("localhost", 10);
             JTextField portBox = new JTextField("3000", 5);
-            JTextField fileField = new JTextField("~/git/csci2020u/final/test.txt", 25);
+            JTextField fileField = new JTextField("test.txt", 25);
 
 
             mainPanel.setBackground(Color.GRAY);
@@ -234,6 +233,7 @@ class Client extends JPanel{
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("send file button clicked");
                     data = "sendfile " + (fileField.getText());
+                    Sender.sendData();
                     sendFile(fileField.getText());
                 }          
             }); 
@@ -256,28 +256,43 @@ class Client extends JPanel{
         }
 
         public void sendFile(String filePath) {
+            System.out.println("send start");
             try{
-                File file = new File(filePath);
-        //InputStream is = new FileInputStream(file);
-        // Get the size of the file
-                long length = file.length();
-                if (length > Integer.MAX_VALUE) {
-                    System.out.println("File is too large.");
-                }
-                byte[] bytes = new byte[(int) length];
-                FileInputStream fis = new FileInputStream(file);
-                BufferedInputStream bis = new BufferedInputStream(fis);
-                BufferedOutputStream out = new BufferedOutputStream(Sender.dataOut);
+                try{
+                    File myFile = new File(filePath);
+                    byte[] mybytearray = new byte[(int) myFile.length()];
 
-                int count;
+                    FileInputStream fis = new FileInputStream(myFile);
+                    BufferedInputStream bis = new BufferedInputStream(fis);
+        //bis.read(mybytearray, 0, mybytearray.length);
 
-                while ((count = bis.read(bytes)) > 0) {
-                    out.write(bytes, 0, count);
+                    DataInputStream dis = new DataInputStream(bis);   
+                    dis.readFully(mybytearray, 0, mybytearray.length);
+
+                    OutputStream os = socket.getOutputStream();
+
+        //Sending file name and file size to the server
+                    DataOutputStream dos = new DataOutputStream(os);   
+                    dos.writeUTF(myFile.getName());   
+                    dos.writeLong(mybytearray.length);   
+                    dos.write(mybytearray, 0, mybytearray.length);   
+                    dos.flush();
+
+        //Sending file data to the server
+                    os.write(mybytearray, 0, mybytearray.length);
+                    os.flush();
+
+                }catch (FileNotFoundException ex){
+                    System.err.println("file not found");
                 }
-            }catch(Exception ex){
-                System.err.println("error sending file");
+            }catch(IOException ex2){
+                System.err.println("IOException at recieve file");
             }
+            System.out.println("send end");
+            
         }
+
+
 
         static class resultWindow extends JPanel {
             int windowWidth = 500;

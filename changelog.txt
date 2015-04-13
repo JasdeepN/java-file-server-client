@@ -1,9 +1,11 @@
 to be added:
-send file to server - partialy done
 server saves a local file
 server uses local file to parse data
 server recieves command and returns appropriate sata
 client uses data to make visualizations
+
+v1.1.12
+client can now send files to server (server makes a copy for its own use leaving the original intact)
 
 v1.1.11
 began implementing send file funtion
