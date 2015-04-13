@@ -1,7 +1,5 @@
-to be added:
-server uses local file to parse data
-server recieves command and returns appropriate sata
-client uses data to make visualizations
+v2.0
+complete overhaul
 
 v1.1.13
 server saves its own copy of the sent file in a folder labeled server_data

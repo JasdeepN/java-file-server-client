@@ -18,123 +18,44 @@ import java.nio.file.Paths;
 
 
 class Client extends JPanel{
-    static Socket socket;
-    static String data;
-    static Scanner scanInput = new Scanner(System.in);
-    static String username;
-
-    static class Sender extends Thread {
-        static DataOutputStream dataOut;
-
-
-        public Sender(DataOutputStream dataOut) {
-            this.dataOut = dataOut;
-            try {
-                dataOut.writeUTF("login " + username);
-                dataOut.flush();
-            } catch(Exception e) {
-                System.err.println("login error");
-                System.exit(0);
-            }
-        }
-
-        public void run() {
-
-        }
-
-        static synchronized public void sendData() {        
-            try {
-                dataOut.writeUTF(data);
-                dataOut.flush();
-                data = null;
-
-            } catch(Exception e) {
-                System.err.println("Sender Error");
-            }
-            
-        }
-    }
-
-    static class Receiver extends Thread {
-        static DataInputStream dataIn;
-        static String returnData = null;
-
-        public Receiver(DataInputStream dataIn) {
-            this.dataIn = dataIn;
-        }
-
-        public void run() {
-            while (true){
-                reciveData();
-            }
-        }
-
-        static synchronized public void reciveData(){
-            try {
-                returnData = dataIn.readUTF();
-                System.out.println(returnData);
-                
-
-            } catch(Exception e) {
-                System.err.println("server has disconnected");
-                System.exit(0);
-            } 
-        }
-    }
-    
-
-    public Client(String hostname, int port, String user) throws Exception {
-        this.socket = new Socket(hostname, port);
-        this.username = user;
-    }
-
-    public void connect() throws Exception {
-        InputStream in = this.socket.getInputStream();
-        OutputStream out = this.socket.getOutputStream();
-        DataInputStream dataIn = new DataInputStream(in);
-        DataOutputStream dataOut = new DataOutputStream(out);
-        //BufferedReader dataIn = new BufferedReader(new InputStreamReader(in));
-
-        // Handle the connection
-        Thread sender = new Sender(dataOut);
-        Thread receiver = new Receiver(dataIn);
-
-        sender.start();
-        receiver.start();
-
-        sender.join();
-        //receiver.join(); //not joining the reviever 
-    }
 
     public static void main(String[] args) throws Exception {
-        MainWindow main = new MainWindow();
-        //move into window
-       // Client c = new Client(args[0], Integer.valueOf(args[1]), args[2]);
-       // c.connect(); 
-
+    Socket sock = new Socket("127.0.0.1", 3000);
+ 
+        //Send file
+        File myFile = new File("user_data/test.txt");
+        byte[] mybytearray = new byte[(int) myFile.length()];
+         
+        FileInputStream fis = new FileInputStream(myFile);
+        BufferedInputStream bis = new BufferedInputStream(fis);
+        //bis.read(mybytearray, 0, mybytearray.length);
+         
+        DataInputStream dis = new DataInputStream(bis);   
+        dis.readFully(mybytearray, 0, mybytearray.length);
+         
+        OutputStream os = sock.getOutputStream();
+         
+        //Sending file name and file size to the server
+        DataOutputStream dos = new DataOutputStream(os);   
+        dos.writeUTF(myFile.getName());   
+        dos.writeLong(mybytearray.length);   
+        dos.write(mybytearray, 0, mybytearray.length);   
+        dos.flush();
+         
+        //Sending file data to the server
+        os.write(mybytearray, 0, mybytearray.length);
+        os.flush();
+         
+        //Closing socket
+        sock.close();
     }
-
-
+}
+/*
     static class MainWindow extends JPanel {
         int windowWidth = 500;
         int windowHeight = 350;
+        File myFile;
 
-       /* JFrame loading = new JFrame("loading My.java...please wait");
-        JLabel load = new JLabel("loading data...please wait");
-        JLabel blank = new JLabel(" ");
-        JPanel loadPanel = new JPanel(new GridLayout(0, 3));
-        loadPanel.setBackground(Color.GRAY);
-
-        loading.setLayout(new BorderLayout(windowWidth, windowHeight));
-        loading.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        loading.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
-        loading.setLocationRelativeTo(null);
-        loading.setResizable(false);
-
-        loadPanel.add(blank);
-        loadPanel.add(load);
-        loading.add(loadPanel, BorderLayout.CENTER);
-        loading.setVisible(true); */
         JFrame frame = new JFrame("TEST BUILD");
         
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -148,6 +69,10 @@ class Client extends JPanel{
 
 
         MainWindow(){
+
+
+            System.err.println("IOException at recieve file");
+            
             setLayout(new BorderLayout());
 
             frame.setLayout(new BorderLayout(windowWidth, windowHeight));
@@ -164,9 +89,9 @@ class Client extends JPanel{
 
 
             JTextField sendField = new JTextField("", 20);
-            JTextField ipBox = new JTextField("localhost", 10);
+            JTextField ipBox = new JTextField("127.0.0.1", 10);
             JTextField portBox = new JTextField("3000", 5);
-            JTextField fileField = new JTextField("test.txt", 25);
+            JTextField fileField = new JTextField("user_data/", 25);
 
 
             mainPanel.setBackground(Color.GRAY);
@@ -206,10 +131,16 @@ class Client extends JPanel{
             frame.setVisible(true);
         //loading.setVisible(false);
 
+
             sendButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    data = (sendField.getText());
-                    Sender.sendData();
+                public void actionPerformed(ActionEvent e){
+                    try{
+                        Sender.dataOut.writeUTF(sendField.getText()); 
+                        Sender.dataOut.flush();  
+                        System.out.println("Send button");
+                    }catch(IOException ex){
+                        System.err.println("IOException at send button");
+                    } 
                 }          
             }); 
 
@@ -245,7 +176,7 @@ class Client extends JPanel{
                     String strPort = portBox.getText();
                     int intPort = Integer.parseInt(strPort);
                     try {
-                        Client c = new Client(ip, intPort, "test client");
+                        Client c = new Client(ip, intPort);
                         c.connect(); 
                     } catch (Exception x){
                         System.err.println("error connecting to server");
@@ -258,35 +189,28 @@ class Client extends JPanel{
         synchronized public void sendFile(String filePath) {
             try{
                 try{
-                    File myFile = new File(filePath);
-                    byte[] mybytearray = new byte[(int) myFile.length()];
 
                     FileInputStream fis = new FileInputStream(myFile);
                     BufferedInputStream bis = new BufferedInputStream(fis);
+                    myFile = new File(filePath);
+                    byte[] mybytearray = new byte[(int) myFile.length()];
+                    Receiver.dataIn.readFully(mybytearray, 0, mybytearray.length);
 
-                    DataInputStream dis = new DataInputStream(bis);   
-                    dis.readFully(mybytearray, 0, mybytearray.length);
 
-                    OutputStream os = socket.getOutputStream();
+                    Sender.dataOut.writeUTF(myFile.getName());   
+                    Sender.dataOut.writeLong(mybytearray.length);   
+                    Sender.dataOut.write(mybytearray, 0, mybytearray.length);   
+                    Sender.dataOut.flush();
 
-                    DataOutputStream dos = new DataOutputStream(os);   
-                    dos.writeUTF(myFile.getName());   
-                    dos.writeLong(mybytearray.length);   
-                    dos.write(mybytearray, 0, mybytearray.length);   
-                    dos.flush();
-
-                    os.write(mybytearray, 0, mybytearray.length);
-                    os.flush();
+                    out.write(mybytearray, 0, mybytearray.length);
 
                 }catch (FileNotFoundException ex){
                     System.err.println("file not found");
                 }
             }catch(IOException ex2){
-                System.err.println("IOException at recieve file");
+                System.err.println("IOException at send file");
             }            
         }
-
-
 
         static class resultWindow extends JPanel {
             int windowWidth = 500;
@@ -312,3 +236,4 @@ class Client extends JPanel{
         }
     }
 }
+*/
