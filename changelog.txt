@@ -1,3 +1,6 @@
+v2.0.1
+added back most feature on client
+
 v2.0
 complete overhaul
 

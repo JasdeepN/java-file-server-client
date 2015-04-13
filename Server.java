@@ -9,35 +9,88 @@ import java.nio.file.Paths;
 class Server{
     //server has access
     static ServerSocket main;  
-    public static void main (String[] args ) throws IOException {   
+    static DataInputStream serverDataIn;
 
-        int bytesRead;
-        int current = 0;
 
-        ServerSocket serverSocket = null;
-        serverSocket = new ServerSocket(3000);
-        System.out.println("waiting...");
-        while(true) {
-            Socket clientSocket = null;
-            clientSocket = serverSocket.accept();
+    //variables below do not have access
+    public Server(int port) throws Exception {
+        this.main = new ServerSocket(port);
+    }
 
-            InputStream in = clientSocket.getInputStream();
+    static class Job extends Thread {
 
-            DataInputStream clientData = new DataInputStream(in); 
+        String input;
+        DataInputStream dataIn;
+        DataOutputStream dataOut; 
 
-            String fileName = clientData.readUTF();   
-            OutputStream output = new FileOutputStream("server_data/"+fileName);   
-            long size = clientData.readLong();   
-            byte[] buffer = new byte[1024];   
-            while (size > 0 && (bytesRead = clientData.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1)   
-            {   
-                output.write(buffer, 0, bytesRead);   
-                size -= bytesRead;   
+        public Job(DataInputStream in, DataOutputStream out) {
+            this.dataIn = in;
+            this.dataOut = out;
+            serverDataIn = in;
+            System.out.println("Client connected waiting for login...");
+        }
+
+        public void run(){
+            while (true){
+                try{
+                    input = dataIn.readUTF().toLowerCase();
+                    System.out.println(input);
+                } catch (IOException ex){
+
+                }
+
             }
+        }
+        
+        static synchronized public void recieveFile(){
+            int bytesRead;
+            int current = 0;
+            try{
+                try{
+                    String fileName = "recieved_" + serverDataIn.readUTF();
+                    OutputStream output = new FileOutputStream("server_data/"+fileName);
+                    long size = serverDataIn.readLong();
+                    byte[] buffer = new byte[1024];
+                    while (size > 0 && (bytesRead = serverDataIn.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1)
+                    {
+                        output.write(buffer, 0, bytesRead);
+                        size -= bytesRead;
+                    }
+                }catch (FileNotFoundException ex){
+                    System.err.println("file not found");
+                }
+            }catch(IOException ex2){
+                System.err.println("IOException at recieve file");
+            }
+            System.out.println("finished adding file");
+        }
+    }
 
-        // Closing the FileOutputStream handle
-            output.close();
+    public void serve() throws Exception {
+        int index = 1;
+        while(true){
+
+            Socket socket = this.main.accept();
+            InputStream in = socket.getInputStream();
+            OutputStream out = socket.getOutputStream();
+            DataInputStream dataIn = new DataInputStream(in);
+            DataOutputStream dataOut = new DataOutputStream(out);
+
+            (new Job(dataIn, dataOut)).start();
+            index = index + 1;
+        } 
+    }
+
+    public static void main(String[] args) throws Exception {
+        try{
+            Server s = new Server(Integer.valueOf(args[0]));
+
+            System.out.println("Waiting for input...");
+            s.serve();
+        }catch (Exception e){
+            System.err.println("clients have disconected");
+            System.exit(0);
+
         }
     }
 }
-

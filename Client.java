@@ -18,44 +18,107 @@ import java.nio.file.Paths;
 
 
 class Client extends JPanel{
+    static Socket socket;
+    static String data;
+    static OutputStream out;
+
+    static class Sender extends Thread {
+        static DataOutputStream dataOut;
+
+
+        public Sender(DataOutputStream dataOut) {
+            this.dataOut = dataOut;
+        }
+
+        public void run() {
+
+        }
+
+        static synchronized public void sendData() {        
+            try {
+                dataOut.writeUTF(data);
+                dataOut.flush();
+            } catch(Exception e) {
+                System.err.println("Sender Error");
+            }
+            
+        }
+    }
+
+    static class Receiver extends Thread {
+        static DataInputStream dataIn;
+        static String returnData;
+
+        public Receiver(DataInputStream dataIn) {
+            this.dataIn = dataIn;
+        }
+
+        public void run() {
+            while (true){
+                reciveData();
+            }
+        }
+
+        static synchronized public void reciveData(){
+            try {
+                returnData = dataIn.readUTF();
+                System.out.println(returnData);
+            } catch(Exception e) {
+                System.err.println("server has disconnected");
+                System.exit(0);
+            } 
+        }
+    }
+    
+
+    public Client(String hostname, int port) throws Exception {
+        this.socket = new Socket(hostname, port);
+            }
+
+    public void connect() throws Exception {
+        InputStream in = this.socket.getInputStream();
+        out = this.socket.getOutputStream();
+        DataInputStream dataIn = new DataInputStream(in);
+        DataOutputStream dataOut = new DataOutputStream(out);
+
+        Thread sender = new Sender(dataOut);
+        Thread receiver = new Receiver(dataIn);
+
+        sender.start();
+        receiver.start();
+
+        //sender.join();
+    }
 
     public static void main(String[] args) throws Exception {
-    Socket sock = new Socket("127.0.0.1", 3000);
- 
-        //Send file
-        File myFile = new File("user_data/test.txt");
-        byte[] mybytearray = new byte[(int) myFile.length()];
-         
-        FileInputStream fis = new FileInputStream(myFile);
-        BufferedInputStream bis = new BufferedInputStream(fis);
-        //bis.read(mybytearray, 0, mybytearray.length);
-         
-        DataInputStream dis = new DataInputStream(bis);   
-        dis.readFully(mybytearray, 0, mybytearray.length);
-         
-        OutputStream os = sock.getOutputStream();
-         
-        //Sending file name and file size to the server
-        DataOutputStream dos = new DataOutputStream(os);   
-        dos.writeUTF(myFile.getName());   
-        dos.writeLong(mybytearray.length);   
-        dos.write(mybytearray, 0, mybytearray.length);   
-        dos.flush();
-         
-        //Sending file data to the server
-        os.write(mybytearray, 0, mybytearray.length);
-        os.flush();
-         
-        //Closing socket
-        sock.close();
+        MainWindow main = new MainWindow();
+        //move into window
+       // Client c = new Client(args[0], Integer.valueOf(args[1]), args[2]);
+       // c.connect(); 
+
     }
-}
-/*
+
     static class MainWindow extends JPanel {
         int windowWidth = 500;
         int windowHeight = 350;
         File myFile;
 
+       /* JFrame loading = new JFrame("loading My.java...please wait");
+        JLabel load = new JLabel("loading data...please wait");
+        JLabel blank = new JLabel(" ");
+        JPanel loadPanel = new JPanel(new GridLayout(0, 3));
+        loadPanel.setBackground(Color.GRAY);
+
+        loading.setLayout(new BorderLayout(windowWidth, windowHeight));
+        loading.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loading.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
+        loading.setLocationRelativeTo(null);
+        loading.setResizable(false);
+
+        loadPanel.add(blank);
+        loadPanel.add(load);
+        loading.add(loadPanel, BorderLayout.CENTER);
+        loading.setVisible(true); */
         JFrame frame = new JFrame("TEST BUILD");
         
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -70,8 +133,6 @@ class Client extends JPanel{
 
         MainWindow(){
 
-
-            System.err.println("IOException at recieve file");
             
             setLayout(new BorderLayout());
 
@@ -236,4 +297,3 @@ class Client extends JPanel{
         }
     }
 }
-*/
