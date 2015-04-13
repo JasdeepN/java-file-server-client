@@ -21,7 +21,6 @@ class Client extends JPanel{
     static boolean keepCheck = false;
     static Scanner scanInput = new Scanner(System.in);
     static String username;
-    static results r;
 
     static class Sender extends Thread {
         static DataOutputStream dataOut;
@@ -64,7 +63,6 @@ class Client extends JPanel{
         }
 
         public void run() {
-            r = new results();
             while (true){
                 reciveData();
             }
@@ -145,12 +143,11 @@ class Client extends JPanel{
         JPanel exitPanel = new JPanel(new FlowLayout());
         JPanel secondaryPanel = new JPanel(new BorderLayout());
         JPanel dataPanel = new JPanel(new FlowLayout());
+        JPanel sendFilePanel = new JPanel(new FlowLayout());
+
 
         MainWindow(){
             setLayout(new BorderLayout());
-
-
-
 
             frame.setLayout(new BorderLayout(windowWidth, windowHeight));
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -161,38 +158,42 @@ class Client extends JPanel{
             JButton exitButton = new JButton("QUIT PROGRAM"); 
             JButton serverConnect = new JButton("CONNECT TO SERVER");
             JButton sendButton = new JButton("SEND");
-            JButton updateButton = new JButton("UPDATE FROM SERVER");
-
+            JButton showResults = new JButton("TEMP RESULT");
+            JButton sendFileButton = new JButton("SEND FILE");
 
 
             JTextField sendField = new JTextField("", 20);
             JTextField ipBox = new JTextField("localhost", 10);
             JTextField portBox = new JTextField("3000", 5);
-
-
-
+            JTextField fileField = new JTextField("", 25);
 
 
             mainPanel.setBackground(Color.GRAY);
             serverPanel.setBackground(Color.GRAY);
             sendPanel.setBackground(Color.GRAY);
             exitPanel.setBackground(Color.GRAY);
+            sendFilePanel.setBackground(Color.GRAY);
 
 
             JLabel reserved = new JLabel("reserved");
 
             dataPanel.add(reserved);
 
-
             sendPanel.add(sendButton);
             sendPanel.add(sendField);
-            sendPanel.add(updateButton);
+            sendPanel.add(showResults);
             exitPanel.add(exitButton);
             serverPanel.add(serverConnect);
             serverPanel.add(ipBox);
             serverPanel.add(portBox);
             secondaryPanel.add(sendPanel, BorderLayout.NORTH);
             secondaryPanel.add(dataPanel, BorderLayout.CENTER);
+            sendFilePanel.add(fileField);
+            sendFilePanel.add(sendFileButton);
+
+
+            secondaryPanel.add(sendFilePanel, BorderLayout.SOUTH);
+
 
             mainPanel.add(secondaryPanel, BorderLayout.CENTER);
             mainPanel.add(exitPanel, BorderLayout.SOUTH);
@@ -211,7 +212,7 @@ class Client extends JPanel{
                 }          
             }); 
 
-            updateButton.addActionListener(new ActionListener() {
+            showResults.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e){
                     resultWindow r = new resultWindow();
                 }          
@@ -224,6 +225,14 @@ class Client extends JPanel{
                     data = "exit";
                     Sender.sendData();
                     System.exit(0);
+                }          
+            }); 
+
+            sendFileButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("send file button clicked");
+                    data = "sendfile " + (fileField.getText());
+                    Sender.sendData();
                 }          
             }); 
 
@@ -247,7 +256,7 @@ class Client extends JPanel{
         static class resultWindow extends JPanel {
             int windowWidth = 500;
             int windowHeight = 350;
-            JFrame frame = new JFrame("TEST BUILD");
+            JFrame frame = new JFrame("RESULT");
 
             JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -255,7 +264,7 @@ class Client extends JPanel{
                 setLayout(new BorderLayout());
 
                 frame.setLayout(new BorderLayout(windowWidth, windowHeight));
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 frame.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
                 frame.setLocationRelativeTo(null);
                 frame.setResizable(false);

@@ -10,6 +10,8 @@ class Server{
     static Map<String, List<String>> serverLog = new HashMap<String, List<String>>();
     static String login = "(login\\s(.*))";
     static String message = "((send)\\s+(\\S+)\\s+(.*))";
+    static String file = "(sendfile)\\s+(.*)";
+
     static List<String> logs = new ArrayList<String>();
 
     //variables below do not have access
@@ -23,8 +25,11 @@ class Server{
         private String Username;
 
         String input = null, msg = null, user = null, currUser = null;
+        String filePath = null;
         Pattern name = Pattern.compile(login);
         Pattern mess = Pattern.compile(message);
+        Pattern filePat = Pattern.compile(file);
+
         DataInputStream dataIn;
         DataOutputStream dataOut; 
 
@@ -72,6 +77,8 @@ class Server{
 
                     Matcher matName = name.matcher(input);
                     Matcher matMsg = mess.matcher(input);
+                    Matcher matFile = filePat.matcher(input);
+
 
                     while (matName.find()){
                         input = "login";
@@ -82,6 +89,13 @@ class Server{
                         input = "send";
                         user = matMsg.group(3);
                         msg = matMsg.group(4);  
+                    } 
+
+
+                    while (matFile.find()){
+                        input = "sendfile";
+                        filePath = matFile.group(2);
+
                     } 
 
                     switch (input) {
@@ -96,7 +110,13 @@ class Server{
                         case "send":
                         break;
 
-                        case "fetch":
+                        case "sendfile":
+                        try {
+                            dataOut.writeUTF(filePath);
+                            dataOut.flush();
+                        } catch(IOException e){
+                            System.out.println("IOException at sendfile on server");
+                        }
                         break;
 
                         case "log":
