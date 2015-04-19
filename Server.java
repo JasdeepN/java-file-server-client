@@ -76,8 +76,14 @@ class Server{
                         break;
 
                         case "cmd":
-                        dataOut.writeUTF(">> COMMAND LIST <<");
-                        dataOut.flush();
+                        List<String> outS = new ArrayList<String>();
+                        outS.add("<html> TEXT COMMAND LIST <BR><BR>");
+                        outS.add("exit - closes all connections and <BR>shuts down the server<BR><BR>");
+                        outS.add("load - loads a file onto the server for parsing<BR><BR>");
+                        outS.add("sendFile - the next thing sent will <BR>go to the file reciever<BR><BR>");
+                        outS.add("files - shows the current list of accessible<BR> files for the server</html>");
+                        
+                        popupMsg commands = new popupMsg(outS);
                         break;
 
                         default:

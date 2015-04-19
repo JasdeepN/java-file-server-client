@@ -62,6 +62,10 @@ class Client extends JPanel{
 
 
             JPanel mainPanel = new JPanel(new BorderLayout());
+            JPanel buttonpanel = new JPanel(new FlowLayout());
+            JPanel tertiaryPanel = new JPanel(new BorderLayout());
+
+
        // JPanel panel2 = new JPanel(new GridLayout(1, 3));
             JPanel serverPanel = new JPanel(new FlowLayout());
             JPanel fileServer = new JPanel(new FlowLayout());
@@ -72,9 +76,11 @@ class Client extends JPanel{
             JPanel dataPanel = new JPanel(new FlowLayout());
 
             JTextField sendField = new JTextField("TEXT COMMANDS ONLY", 20);
-            JTextField loadFile = new JTextField("FILE NAME", 20);
+            JTextField loadFile4Buttons = new JTextField("FILE NAME", 20);
             JTextField ipBox = new JTextField("127.0.0.1", 10);
             JTextField portBox = new JTextField("3000", 5);
+            JTextField kbox = new JTextField("5", 3);
+
 
             frame.setLayout(new BorderLayout(windowWidth, windowHeight));
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -86,7 +92,11 @@ class Client extends JPanel{
             JButton serverConnect = new JButton("CONNECT TO SERVER");
             JButton sendButton = new JButton("SEND");
             JButton fileSender = new JButton("FILE SENDER");
-            JButton loadbutton = new JButton("PIE");
+            JButton pieButton = new JButton("PIE");
+            JButton hisButton = new JButton("HIS");
+            JButton topKButton = new JButton("TOP K");
+
+
             JButton availbutton = new JButton("SHOW FILES");
 
 
@@ -97,15 +107,23 @@ class Client extends JPanel{
             serverPanel.setBackground(Color.GRAY);
             sendPanel.setBackground(Color.GRAY);
             exitPanel.setBackground(Color.GRAY);
+            tertiaryPanel.setBackground(Color.GRAY);
+            buttonpanel.setBackground(Color.GRAY);
+
+
 
 
             JLabel reserved = new JLabel("if server does not respond, try reconnecting");
 
             dataPanel.add(reserved);
+            buttonpanel.add(availbutton);
+            buttonpanel.add(pieButton);
+            fileServer.add(loadFile4Buttons);
+            
+            buttonpanel.add(hisButton);
+            buttonpanel.add(topKButton);
+            buttonpanel.add(kbox);
 
-            fileServer.add(loadbutton);
-            fileServer.add(loadFile);
-            fileServer.add(availbutton);
 
             sendPanel.add(sendButton);
             sendPanel.add(sendField);
@@ -116,9 +134,12 @@ class Client extends JPanel{
             serverPanel.add(portBox);
             secondaryPanel.add(sendPanel, BorderLayout.NORTH);
             secondaryPanel.add(fileServer, BorderLayout.CENTER);
-            secondaryPanel.add(dataPanel, BorderLayout.SOUTH);
+            tertiaryPanel.add(dataPanel, BorderLayout.SOUTH);
 
-            mainPanel.add(secondaryPanel, BorderLayout.CENTER);
+            tertiaryPanel.add(secondaryPanel, BorderLayout.NORTH);
+            tertiaryPanel.add(buttonpanel, BorderLayout.CENTER);
+
+            mainPanel.add(tertiaryPanel, BorderLayout.CENTER);
             mainPanel.add(exitPanel, BorderLayout.SOUTH);
             mainPanel.add(serverPanel, BorderLayout.NORTH);
 
@@ -165,12 +186,12 @@ class Client extends JPanel{
                 }          
             }); 
 
-            loadbutton.addActionListener(new ActionListener() {
+            pieButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                // System.out.println("exit button clicked");
                     try{
-                       
-                        Pie.getPie(loadFile.getText());
+
+                        Pie.getPie(loadFile4Buttons.getText());
 
                         
                     }catch(Exception ex){
@@ -179,7 +200,7 @@ class Client extends JPanel{
                 }          
             }); 
 
-              availbutton.addActionListener(new ActionListener() {
+            availbutton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                // System.out.println("exit button clicked");
                     try{
