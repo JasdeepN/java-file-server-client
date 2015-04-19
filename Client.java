@@ -158,7 +158,7 @@ class Client extends JPanel{
 
             sendFileButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("send file button clicked");
+                    //System.out.println("send file button clicked");
                     try{
                         dos.writeUTF("sendfile");
                         dos.flush();
@@ -184,10 +184,10 @@ class Client extends JPanel{
             String strPort = portBox.getText();
             int intPort = Integer.parseInt(strPort);
             try {
-                System.out.println("reconnect");
+                //System.out.println("reconnect");
                 Client c = new Client(ip, intPort);
                 c.connect(); 
-                System.out.println("connect");
+                //System.out.println("connect");
             } catch (Exception x){
                 System.err.println("error connecting to server");
             }
