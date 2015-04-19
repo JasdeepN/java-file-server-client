@@ -19,29 +19,24 @@ import java.nio.file.Paths;
 
 class Client extends JPanel{
     static Socket socket;
-    static String data;
-    static OutputStream out;
-    static FileInputStream fis;  
-    static BufferedInputStream bis;
-    static DataInputStream dis;    
-
-    static OutputStream os;  
-    static DataOutputStream dos; 
-
-
-
-
+    String data;
+    FileInputStream fis;  
+    BufferedInputStream bis;
+    InputStream in;      
+    OutputStream out;
+    static DataInputStream dataIn;
+    DataOutputStream dataOut; 
 
     public Client(String hostname, int port) throws Exception {
         this.socket = new Socket(hostname, port);
+        connect();
     }
 
     public void connect() throws Exception {
-        InputStream in = this.socket.getInputStream();
-        OutputStream out = this.socket.getOutputStream();
-        DataInputStream dataIn = new DataInputStream(in);
-        dos = new DataOutputStream(out);
-        
+        this.in = this.socket.getInputStream();
+        this.out = this.socket.getOutputStream();
+        this.dataIn = new DataInputStream(in);
+        this.dataOut = new DataOutputStream(out);
     }
 
     public static void main(String[] args) throws Exception {
@@ -49,30 +44,32 @@ class Client extends JPanel{
     }
 
     static class MainWindow extends JPanel {
+
+        static Client c;
         int windowWidth = 500;
         int windowHeight = 350;
         File myFile;
 
-        JFrame frame = new JFrame("TEST BUILD");
-        
-        JPanel mainPanel = new JPanel(new BorderLayout());
-       // JPanel panel2 = new JPanel(new GridLayout(1, 3));
-        JPanel serverPanel = new JPanel(new FlowLayout());
-        JPanel sendPanel = new JPanel (new FlowLayout());
-        JPanel exitPanel = new JPanel(new FlowLayout());
-        JPanel secondaryPanel = new JPanel(new BorderLayout());
-        JPanel dataPanel = new JPanel(new FlowLayout());
-        JPanel sendFilePanel = new JPanel(new FlowLayout());
+        static JFrame frame = new JFrame("TEST BUILD");
 
-        JTextField sendField = new JTextField("", 20);
-        JTextField ipBox = new JTextField("127.0.0.1", 10);
-        JTextField portBox = new JTextField("3000", 5);
-        JTextField fileField = new JTextField("user_data/", 25);
 
         MainWindow(){
 
 
             setLayout(new BorderLayout());
+
+
+            JPanel mainPanel = new JPanel(new BorderLayout());
+       // JPanel panel2 = new JPanel(new GridLayout(1, 3));
+            JPanel serverPanel = new JPanel(new FlowLayout());
+            JPanel sendPanel = new JPanel (new FlowLayout());
+            JPanel exitPanel = new JPanel(new FlowLayout());
+            JPanel secondaryPanel = new JPanel(new BorderLayout());
+            JPanel dataPanel = new JPanel(new FlowLayout());
+
+            JTextField sendField = new JTextField("", 20);
+            JTextField ipBox = new JTextField("127.0.0.1", 10);
+            JTextField portBox = new JTextField("3000", 5);
 
             frame.setLayout(new BorderLayout(windowWidth, windowHeight));
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,18 +80,13 @@ class Client extends JPanel{
             JButton exitButton = new JButton("QUIT PROGRAM"); 
             JButton serverConnect = new JButton("CONNECT TO SERVER");
             JButton sendButton = new JButton("SEND");
-            JButton showResults = new JButton("TEMP RESULT");
-            JButton sendFileButton = new JButton("SEND FILE");
-
-
-            
+            JButton fileSender = new JButton("FILE SENDER");
 
 
             mainPanel.setBackground(Color.GRAY);
             serverPanel.setBackground(Color.GRAY);
             sendPanel.setBackground(Color.GRAY);
             exitPanel.setBackground(Color.GRAY);
-            sendFilePanel.setBackground(Color.GRAY);
 
 
             JLabel reserved = new JLabel("reserved");
@@ -103,18 +95,16 @@ class Client extends JPanel{
 
             sendPanel.add(sendButton);
             sendPanel.add(sendField);
-            sendPanel.add(showResults);
+            sendPanel.add(fileSender);
             exitPanel.add(exitButton);
             serverPanel.add(serverConnect);
             serverPanel.add(ipBox);
             serverPanel.add(portBox);
             secondaryPanel.add(sendPanel, BorderLayout.NORTH);
             secondaryPanel.add(dataPanel, BorderLayout.CENTER);
-            sendFilePanel.add(fileField);
-            sendFilePanel.add(sendFileButton);
 
 
-            secondaryPanel.add(sendFilePanel, BorderLayout.SOUTH);
+
 
 
             mainPanel.add(secondaryPanel, BorderLayout.CENTER);
@@ -130,20 +120,21 @@ class Client extends JPanel{
 
             sendButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e){
-                    reconnect();
+                   // reconnect();
                     try{
-                        dos.writeUTF(sendField.getText()); 
-                        dos.flush();  
-                        System.out.println("Send button");
+                        c.dataOut.writeUTF(sendField.getText()); 
+                        c.dataOut.flush();  
                     }catch(IOException ex){
                         System.err.println("IOException at send button");
                     } 
                 }          
             }); 
 
-            showResults.addActionListener(new ActionListener() {
+            fileSender.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e){
-                    resultWindow r = new resultWindow();
+                    MainWindow.frame.setVisible(false);
+
+                    fileWindow r = new fileWindow();
                 }          
             }); 
 
@@ -156,100 +147,66 @@ class Client extends JPanel{
                 }          
             }); 
 
-            sendFileButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //System.out.println("send file button clicked");
-                    try{
-                        dos.writeUTF("sendfile");
-                        dos.flush();
-
-                        sendFile(fileField.getText());
-                    }
-                    catch (Exception m){
-                        System.err.println("error send file");
-                    }
-                }          
-            }); 
 
             serverConnect.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    reconnect(); 
+                    String ip = ipBox.getText();
+                    String strPort = portBox.getText();
+                    int intPort = Integer.parseInt(strPort);
+                    try {
+                //System.out.println("reconnect");
+                        c = new Client(ip, intPort);
+                        c.connect(); 
+                        Receiver getData = new Receiver(Client.dataIn);
+                        getData.start();
+                //System.out.println("connect");
+                    } catch (Exception x){
+                        System.err.println("error connecting to server");
+                    }
                 }     
             }); 
 
         }
 
-        public void reconnect(){
-            String ip = ipBox.getText();
-            String strPort = portBox.getText();
-            int intPort = Integer.parseInt(strPort);
+       /* static public void reconnect(){
+          try {
+            c.in = c.socket.getInputStream();
+            c.out = c.socket.getOutputStream();
+            c.dataIn = new DataInputStream(c.in);
+            c.dataOut = new DataOutputStream(c.out);
+            Receiver.check = true;
+        } catch (Exception x){
+            System.err.println("error connecting to server");
+        }
+    }*/
+
+    static class Receiver extends Thread {
+        static String returnData = null;
+        //static boolean check = true;
+        //Client y;
+        static DataInputStream x;
+        public Receiver(DataInputStream y) {
+           this.x = y;
+        }
+
+        public void run() {
+            while (true){
+                reciveData();
+            }
+        }
+
+        static synchronized public void reciveData(){
             try {
-                //System.out.println("reconnect");
-                Client c = new Client(ip, intPort);
-                c.connect(); 
-                //System.out.println("connect");
-            } catch (Exception x){
-                System.err.println("error connecting to server");
-            }
-        }
-
-        synchronized public void sendFile(String filePath) {
-            try{
-                try{
-                    reconnect();
-                    myFile = new File(filePath);
-
-                    byte[] mybytearray = new byte[(int) myFile.length()];  
-
-                    fis = new FileInputStream(myFile);  
-                    bis = new BufferedInputStream(fis);  
-
-                    dis = new DataInputStream(bis);     
-                    dis.readFully(mybytearray, 0, mybytearray.length);  
-
-                    os = socket.getOutputStream();  
-                    dos = new DataOutputStream(os);     
-
-                    dos.writeUTF(myFile.getName());     
-                    dos.writeLong(mybytearray.length);     
-                    dos.write(mybytearray, 0, mybytearray.length);     
-                    dos.flush();  
-
-        //Sending file data to the server  
-                    os.write(mybytearray, 0, mybytearray.length);  
-                    os.flush();  
-
-                }catch (FileNotFoundException ex){
-                    System.err.println("file not found");
-                }
-            }catch(IOException ex2){
-                System.err.println("IOException at send file");
-            }            
-        }
-
-
-
-        static class resultWindow extends JPanel {
-            int windowWidth = 500;
-            int windowHeight = 350;
-            JFrame frame = new JFrame("RESULT");
-
-            JPanel mainPanel = new JPanel(new BorderLayout());
-
-            resultWindow(){
-                setLayout(new BorderLayout());
-
-                frame.setLayout(new BorderLayout(windowWidth, windowHeight));
-                frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                frame.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
-                frame.setLocationRelativeTo(null);
-                frame.setResizable(false);
-
-                mainPanel.setBackground(Color.GRAY);
-                frame.add(mainPanel, BorderLayout.CENTER);
-
-                frame.setVisible(true);
-            }
+                returnData = x.readUTF();
+                System.out.println(returnData);
+            } catch(Exception e) {
+                System.out.println("data end");
+                //check = false;
+                //reconnect();
+            } 
         }
     }
+
+
+}
 }

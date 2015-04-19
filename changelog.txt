@@ -1,3 +1,6 @@
+v2.2
+changed alot of things
+
 v2.1.2
 fixed minor problem with saving file works correctly now
 
