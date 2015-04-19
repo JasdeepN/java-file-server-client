@@ -11,8 +11,7 @@ class Server{
     static Server s;
     static ServerSocket main; 
     static Socket socket; 
-    static String login = "(login\\s(.*))";
-    static String message = "((send)\\s+(\\S+)\\s+(.*))";
+    static String load = "(load\\s(.*))";
 
     static List<String> logs = new ArrayList<String>();
 
@@ -28,7 +27,7 @@ class Server{
 
         String input = null;
         String filePath = null;
-        Pattern name = Pattern.compile(login);
+        Pattern loadfile = Pattern.compile(load);
         static DataInputStream dataIn; 
         static DataOutputStream dataOut;
 
@@ -40,7 +39,6 @@ class Server{
 
         }
 
-
         public void run(){
             while (true){
                 try{
@@ -50,12 +48,12 @@ class Server{
 
                     input = dataIn.readUTF().toLowerCase();
 
-                    Matcher matName = name.matcher(input);
+                    Matcher matLoad = loadfile.matcher(input);
 
 
-                    while (matName.find()){
-                        input = "login";
-                       // currUser = (matName.group(2));
+                    while (matLoad.find()){
+                        input = "load";
+                        filePath = (matLoad.group(2));
                     } 
 
                     switch (input) {
@@ -63,7 +61,9 @@ class Server{
                         System.exit(0);
                         break;
 
-                        case "status":
+                        case "load":
+                        ParseFile parser = new ParseFile();
+                        parser.load(filePath);
                         break;
 
                         case "sendfile":
@@ -99,6 +99,7 @@ class Server{
             }
         }
     }
+
 
     static synchronized public void recieveFile() throws IOException{
 
