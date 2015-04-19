@@ -45,7 +45,7 @@ class Server{
             while (true){
                 try{
 
-                    System.out.println("connection");
+                    System.out.println("waiting...");
                     //dataOut.writeUTF("reset connections");
 
                     input = dataIn.readUTF().toLowerCase();
@@ -91,7 +91,7 @@ class Server{
                         }
                     } catch (IOException ex){
                         System.err.println("Unhandled IOException (all clients disconected most likely)");
-
+                        System.exit(0);
                     }
                 }
             }

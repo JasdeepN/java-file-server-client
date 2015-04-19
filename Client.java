@@ -132,9 +132,9 @@ class Client extends JPanel{
 
             fileSender.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e){
-                    MainWindow.frame.setVisible(false);
+                    //MainWindow.frame.setVisible(false);
 
-                    fileWindow r = new fileWindow();
+                    fileSender r = new fileSender();
                 }          
             }); 
 

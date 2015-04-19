@@ -1,3 +1,10 @@
+v2.3 - STABLE
+everyting implemented currently works
+-can send and save file to server
+-send commands before or after sending a file
+-popup window to send file to server
+-invalid input returns a message to the user
+
 v2.2
 changed alot of things
 
