@@ -37,6 +37,8 @@ class Client extends JPanel{
         this.out = this.socket.getOutputStream();
         this.dataIn = new DataInputStream(in);
         this.dataOut = new DataOutputStream(out);
+        Receiver getData = new Receiver(this.dataIn);
+        getData.start();
     }
 
     public static void main(String[] args) throws Exception {
@@ -103,10 +105,6 @@ class Client extends JPanel{
             secondaryPanel.add(sendPanel, BorderLayout.NORTH);
             secondaryPanel.add(dataPanel, BorderLayout.CENTER);
 
-
-
-
-
             mainPanel.add(secondaryPanel, BorderLayout.CENTER);
             mainPanel.add(exitPanel, BorderLayout.SOUTH);
             mainPanel.add(serverPanel, BorderLayout.NORTH);
@@ -142,8 +140,15 @@ class Client extends JPanel{
             exitButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                // System.out.println("exit button clicked");
+                    try{
+                        c.dataOut.writeUTF("exit");
+                        c.dataOut.flush();
+                        System.exit(0);
+                    }catch(IOException ex){
+                        System.err.println("IOException at exit button");
+                        System.exit(0);
 
-                    System.exit(0);
+                    }
                 }          
             }); 
 
@@ -157,56 +162,15 @@ class Client extends JPanel{
                 //System.out.println("reconnect");
                         c = new Client(ip, intPort);
                         c.connect(); 
-                        Receiver getData = new Receiver(Client.dataIn);
-                        getData.start();
                 //System.out.println("connect");
                     } catch (Exception x){
                         System.err.println("error connecting to server");
+                        popupMsg pop = new popupMsg("error server not found");
                     }
                 }     
             }); 
 
         }
 
-       /* static public void reconnect(){
-          try {
-            c.in = c.socket.getInputStream();
-            c.out = c.socket.getOutputStream();
-            c.dataIn = new DataInputStream(c.in);
-            c.dataOut = new DataOutputStream(c.out);
-            Receiver.check = true;
-        } catch (Exception x){
-            System.err.println("error connecting to server");
-        }
-    }*/
-
-    static class Receiver extends Thread {
-        static String returnData = null;
-        //static boolean check = true;
-        //Client y;
-        static DataInputStream x;
-        public Receiver(DataInputStream y) {
-           this.x = y;
-        }
-
-        public void run() {
-            while (true){
-                reciveData();
-            }
-        }
-
-        static synchronized public void reciveData(){
-            try {
-                returnData = x.readUTF();
-                System.out.println(returnData);
-            } catch(Exception e) {
-                System.out.println("data end");
-                //check = false;
-                //reconnect();
-            } 
-        }
     }
-
-
-}
 }

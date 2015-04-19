@@ -1,3 +1,9 @@
+v2.4
+server can now tell the user what files it has available to it
+
+v2.3.1
+moved some stuff into new files
+
 v2.3 - STABLE
 everyting implemented currently works
 -can send and save file to server
