@@ -64,12 +64,15 @@ class Client extends JPanel{
             JPanel mainPanel = new JPanel(new BorderLayout());
        // JPanel panel2 = new JPanel(new GridLayout(1, 3));
             JPanel serverPanel = new JPanel(new FlowLayout());
+            JPanel fileServer = new JPanel(new FlowLayout());
+
             JPanel sendPanel = new JPanel (new FlowLayout());
             JPanel exitPanel = new JPanel(new FlowLayout());
             JPanel secondaryPanel = new JPanel(new BorderLayout());
             JPanel dataPanel = new JPanel(new FlowLayout());
 
-            JTextField sendField = new JTextField("", 20);
+            JTextField sendField = new JTextField("TEXT COMMANDS ONLY", 20);
+            JTextField loadFile = new JTextField("FILE NAME", 20);
             JTextField ipBox = new JTextField("127.0.0.1", 10);
             JTextField portBox = new JTextField("3000", 5);
 
@@ -83,17 +86,26 @@ class Client extends JPanel{
             JButton serverConnect = new JButton("CONNECT TO SERVER");
             JButton sendButton = new JButton("SEND");
             JButton fileSender = new JButton("FILE SENDER");
+            JButton loadbutton = new JButton("PIE");
+            JButton availbutton = new JButton("SHOW FILES");
+
+
 
 
             mainPanel.setBackground(Color.GRAY);
+            fileServer.setBackground(Color.GRAY);
             serverPanel.setBackground(Color.GRAY);
             sendPanel.setBackground(Color.GRAY);
             exitPanel.setBackground(Color.GRAY);
 
 
-            JLabel reserved = new JLabel("reserved");
+            JLabel reserved = new JLabel("if server does not respond, try reconnecting");
 
             dataPanel.add(reserved);
+
+            fileServer.add(loadbutton);
+            fileServer.add(loadFile);
+            fileServer.add(availbutton);
 
             sendPanel.add(sendButton);
             sendPanel.add(sendField);
@@ -103,7 +115,8 @@ class Client extends JPanel{
             serverPanel.add(ipBox);
             serverPanel.add(portBox);
             secondaryPanel.add(sendPanel, BorderLayout.NORTH);
-            secondaryPanel.add(dataPanel, BorderLayout.CENTER);
+            secondaryPanel.add(fileServer, BorderLayout.CENTER);
+            secondaryPanel.add(dataPanel, BorderLayout.SOUTH);
 
             mainPanel.add(secondaryPanel, BorderLayout.CENTER);
             mainPanel.add(exitPanel, BorderLayout.SOUTH);
@@ -151,6 +164,33 @@ class Client extends JPanel{
                     }
                 }          
             }); 
+
+            loadbutton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+               // System.out.println("exit button clicked");
+                    try{
+                       
+                        Pie.getPie(loadFile.getText());
+
+                        
+                    }catch(Exception ex){
+                        System.err.println(ex + " Exception at loadfile (pie) button");
+                    }
+                }          
+            }); 
+
+              availbutton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+               // System.out.println("exit button clicked");
+                    try{
+                        c.dataOut.writeUTF("files");
+                        c.dataOut.flush();
+                    }catch(IOException ex){
+                        System.err.println(ex+"IOException at availbutton button");
+                    }
+                }          
+            });
+
 
 
             serverConnect.addActionListener(new ActionListener() {

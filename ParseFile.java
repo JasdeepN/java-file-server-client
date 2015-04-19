@@ -7,7 +7,7 @@ import java.util.regex.*;
 public class ParseFile implements RecordLoader{
 	List<Record> recordList = new ArrayList<Record>();
 	public List<Record> load(String filename){
-		System.out.println("from server");
+		//System.out.println("from server");
 
 		Matcher matEmp ;
 		Matcher matLNam ;
@@ -24,7 +24,7 @@ public class ParseFile implements RecordLoader{
 
 		try{
 
-			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			BufferedReader reader = new BufferedReader(new FileReader("server_data/" + filename));
 			String line = reader.readLine();
 
 			String sector = "<h1> Public Sector Salary Disclosure for 2013: (?<sec>(.*))</h1>";

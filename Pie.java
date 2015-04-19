@@ -24,11 +24,19 @@ import javax.swing.JPanel;
 public class Pie extends JFrame {
 
     public static void main(String[] args) {
-     
+
         MainWindow x = new MainWindow(args[0]);
 
     }
+
+   static public void getPie (String args){
+        MainWindow x = new MainWindow(args);
+    }
 }
+
+
+
+
 
 class MainWindow extends JPanel {
 
@@ -58,7 +66,7 @@ class MainWindow extends JPanel {
         JFrame frame = new JFrame("Pie.java");
 
         frame.setLayout(new BorderLayout(windowWidth, windowHeight));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);

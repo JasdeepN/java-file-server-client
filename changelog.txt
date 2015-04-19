@@ -1,3 +1,6 @@
+v2.5
+can now display pie correctly
+
 v2.4.1
 began adding back parts of assignment 3
 
