@@ -1,3 +1,6 @@
+v2.1
+changed alot of stuff
+server can now recieve commands after getting a file (barely)
 v2.0.2
 client sends file and server can recieve but no other commands can go through
 

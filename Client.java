@@ -20,43 +20,16 @@ import java.nio.file.Paths;
 class Client extends JPanel{
     static Socket socket;
     static String data;
-
+    static OutputStream out;
     static FileInputStream fis;  
     static BufferedInputStream bis;
     static DataInputStream dis;    
 
     static OutputStream os;  
-    static InputStream in;
-
     static DataOutputStream dos; 
-    static DataInputStream din;
 
 
-    static class Receiver extends Thread {
-        static DataInputStream dataIn;
-        static String returnData;
 
-        public Receiver(DataInputStream dataIn) {
-            this.dataIn = dataIn;
-        }
-
-        public void run() {
-            while (true){
-                reciveData();
-            }
-        }
-
-        static synchronized public void reciveData(){
-            try {
-                returnData = dataIn.readUTF();
-                System.out.println(returnData);
-            } catch(Exception e) {
-                System.err.println("server has disconnected");
-                System.exit(0);
-            } 
-        }
-    }
-    
 
 
     public Client(String hostname, int port) throws Exception {
@@ -64,23 +37,15 @@ class Client extends JPanel{
     }
 
     public void connect() throws Exception {
-        in = this.socket.getInputStream();
-        os = this.socket.getOutputStream();
-        din = new DataInputStream(in);
-        dos = new DataOutputStream(os);
-
-
-        Thread receiver = new Receiver(din);
-
-
+        InputStream in = this.socket.getInputStream();
+        OutputStream out = this.socket.getOutputStream();
+        DataInputStream dataIn = new DataInputStream(in);
+        dos = new DataOutputStream(out);
+        
     }
 
     public static void main(String[] args) throws Exception {
         MainWindow main = new MainWindow();
-        //move into window
-       // Client c = new Client(args[0], Integer.valueOf(args[1]), args[2]);
-       // c.connect(); 
-
     }
 
     static class MainWindow extends JPanel {
@@ -88,25 +53,10 @@ class Client extends JPanel{
         int windowHeight = 350;
         File myFile;
 
-       /* JFrame loading = new JFrame("loading My.java...please wait");
-        JLabel load = new JLabel("loading data...please wait");
-        JLabel blank = new JLabel(" ");
-        JPanel loadPanel = new JPanel(new GridLayout(0, 3));
-        loadPanel.setBackground(Color.GRAY);
-
-        loading.setLayout(new BorderLayout(windowWidth, windowHeight));
-        loading.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        loading.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
-        loading.setLocationRelativeTo(null);
-        loading.setResizable(false);
-
-        loadPanel.add(blank);
-        loadPanel.add(load);
-        loading.add(loadPanel, BorderLayout.CENTER);
-        loading.setVisible(true); */
         JFrame frame = new JFrame("TEST BUILD");
         
         JPanel mainPanel = new JPanel(new BorderLayout());
+       // JPanel panel2 = new JPanel(new GridLayout(1, 3));
         JPanel serverPanel = new JPanel(new FlowLayout());
         JPanel sendPanel = new JPanel (new FlowLayout());
         JPanel exitPanel = new JPanel(new FlowLayout());
@@ -114,8 +64,14 @@ class Client extends JPanel{
         JPanel dataPanel = new JPanel(new FlowLayout());
         JPanel sendFilePanel = new JPanel(new FlowLayout());
 
+        JTextField sendField = new JTextField("", 20);
+        JTextField ipBox = new JTextField("127.0.0.1", 10);
+        JTextField portBox = new JTextField("3000", 5);
+        JTextField fileField = new JTextField("user_data/", 25);
 
         MainWindow(){
+
+
             setLayout(new BorderLayout());
 
             frame.setLayout(new BorderLayout(windowWidth, windowHeight));
@@ -131,10 +87,7 @@ class Client extends JPanel{
             JButton sendFileButton = new JButton("SEND FILE");
 
 
-            JTextField sendField = new JTextField("", 20);
-            JTextField ipBox = new JTextField("127.0.0.1", 10);
-            JTextField portBox = new JTextField("3000", 5);
-            JTextField fileField = new JTextField("user_data/", 25);
+            
 
 
             mainPanel.setBackground(Color.GRAY);
@@ -170,10 +123,14 @@ class Client extends JPanel{
 
             frame.add(mainPanel, BorderLayout.CENTER);
 
+        //frame.pack();
             frame.setVisible(true);
+        //loading.setVisible(false);
+
 
             sendButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e){
+                    reconnect();
                     try{
                         dos.writeUTF(sendField.getText()); 
                         dos.flush();  
@@ -194,13 +151,8 @@ class Client extends JPanel{
             exitButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                // System.out.println("exit button clicked");
-                    try{
-                        dos.writeUTF("sendfile");
-                        dos.flush();
-                        System.exit(0);
-                    } catch (Exception m){
-                        System.err.println("exit error");
-                    }
+
+                    System.exit(0);
                 }          
             }); 
 
@@ -221,25 +173,30 @@ class Client extends JPanel{
 
             serverConnect.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-               // System.out.println("SERVER CONNECT");
-                    String ip = ipBox.getText();
-                    String strPort = portBox.getText();
-                    int intPort = Integer.parseInt(strPort);
-                    try {
-                        Client c = new Client(ip, intPort);
-                        c.connect(); 
-                        System.out.println("connect");
-                    } catch (Exception x){
-                        System.err.println("error connecting to server");
-                    }
-                }          
-            });
+                    reconnect(); 
+                }     
+            }); 
 
+        }
+
+        public void reconnect(){
+            String ip = ipBox.getText();
+            String strPort = portBox.getText();
+            int intPort = Integer.parseInt(strPort);
+            try {
+                System.out.println("reconnect");
+                Client c = new Client(ip, intPort);
+                c.connect(); 
+                System.out.println("connect");
+            } catch (Exception x){
+                System.err.println("error connecting to server");
+            }
         }
 
         synchronized public void sendFile(String filePath) {
             try{
                 try{
+                    reconnect();
                     myFile = new File(filePath);
 
                     byte[] mybytearray = new byte[(int) myFile.length()];  
@@ -247,14 +204,18 @@ class Client extends JPanel{
                     fis = new FileInputStream(myFile);  
                     bis = new BufferedInputStream(fis);  
 
-                    DataInputStream tempdis = new DataInputStream(bis);     
-                    tempdis.readFully(mybytearray, 0, mybytearray.length);                         
+                    dis = new DataInputStream(bis);     
+                    dis.readFully(mybytearray, 0, mybytearray.length);  
+
+                    os = socket.getOutputStream();  
+                    dos = new DataOutputStream(os);     
 
                     dos.writeUTF(myFile.getName());     
                     dos.writeLong(mybytearray.length);     
                     dos.write(mybytearray, 0, mybytearray.length);     
                     dos.flush();  
 
+        //Sending file data to the server  
                     os.write(mybytearray, 0, mybytearray.length);  
                     os.flush();  
 
@@ -265,6 +226,8 @@ class Client extends JPanel{
                 System.err.println("IOException at send file");
             }            
         }
+
+
 
         static class resultWindow extends JPanel {
             int windowWidth = 500;
