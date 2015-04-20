@@ -49,7 +49,7 @@ class Client extends JPanel{
 
         static Client c;
         int windowWidth = 500;
-        int windowHeight = 350;
+        int windowHeight = 250;
         File myFile;
 
         static JFrame frame = new JFrame("Final Build");
@@ -84,7 +84,6 @@ class Client extends JPanel{
             JTextField portBox = new JTextField("3000", 5);
             JTextField kbox = new JTextField("5", 3);
 
-
             frame.setLayout(new BorderLayout(windowWidth, windowHeight));
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
@@ -99,11 +98,7 @@ class Client extends JPanel{
             JButton hisButton = new JButton("HIS");
             JButton topKButton = new JButton("TOP K");
 
-
             JButton availbutton = new JButton("SHOW FILES");
-
-
-
 
             mainPanel.setBackground(Color.GRAY);
             fileServer.setBackground(Color.GRAY);
@@ -113,10 +108,8 @@ class Client extends JPanel{
             tertiaryPanel.setBackground(Color.GRAY);
             buttonpanel.setBackground(Color.GRAY);
 
-
-
-
-            JLabel reserved = new JLabel("if server does not respond, try reconnecting");
+            String pleasewait = "please be patient server may take some time to calculate</html>";
+            JLabel reserved = new JLabel("<html>if server does not respond, try reconnecting<BR>" + pleasewait);
 
             dataPanel.add(reserved);
             buttonpanel.add(availbutton);
@@ -168,7 +161,7 @@ class Client extends JPanel{
 
             fileSender.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e){
-                    //MainWindow.frame.setVisible(false);
+
 
                     fileSender r = new fileSender();
                 }          
@@ -204,7 +197,7 @@ class Client extends JPanel{
                 }          
             }); 
 
-               hisButton.addActionListener(new ActionListener() {
+            hisButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                // System.out.println("exit button clicked");
                     try{
@@ -258,7 +251,6 @@ class Client extends JPanel{
                 //System.out.println("connect");
                     } catch (Exception x){
                         System.err.println("error connecting to server");
-                        popupMsg pop = new popupMsg("error server not found");
                     }
                 }     
             }); 

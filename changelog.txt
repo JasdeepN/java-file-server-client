@@ -1,3 +1,5 @@
+v2.8 final build
+
 v2.7 
 added Hist
 
@@ -40,7 +42,7 @@ v2.0.2
 client sends file and server can recieve but no other commands can go through
 
 v2.0.1
-added back most feature on client
+added back most features on client
 
 v2.0
 complete overhaul
