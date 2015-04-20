@@ -1,3 +1,6 @@
+v2.7 
+added Hist
+
 v2.6
 added top K
 

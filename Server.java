@@ -13,6 +13,8 @@ class Server{
     static Socket socket; 
     static String load = "(load\\s(.*))";
     static String top = "(top)\\s(.*)\\s(.*)\\s(.*)";
+    static String pie = "(pie)\\s(.*)";
+
 
 
     static List<String> logs = new ArrayList<String>();
@@ -31,6 +33,8 @@ class Server{
         String filePath = null, a = null, b = null, c = null;
         Pattern loadfile = Pattern.compile(load);
         Pattern loadtop = Pattern.compile(top);
+        Pattern loadpie = Pattern.compile(pie);
+
 
         static DataInputStream dataIn; 
         static DataOutputStream dataOut;
@@ -54,14 +58,21 @@ class Server{
 
                     Matcher matLoad = loadfile.matcher(input);
                     Matcher matTop = loadtop.matcher(input);
+                    Matcher matPie = loadpie.matcher(input);
+
 
 
                     while (matLoad.find()){
                         input = "load";
                         filePath = (matLoad.group(2));
+                    }
+
+                    while (matPie.find()){
+                        input = "pie";
+                        a = (matPie.group(2));
                     } 
 
-                     while (matTop.find()){
+                    while (matTop.find()){
                         input = "top";
                         a = (matTop.group(2));
                         b = (matTop.group(3));
@@ -80,6 +91,14 @@ class Server{
 
                         case "sendfile":
                         recieveFile();
+                        break;
+
+                        case "his":
+                        His.run();
+                        break;
+
+                        case "pie":
+                        Pie.getPie(a);
                         break;
 
                         case "files":

@@ -52,7 +52,7 @@ class Client extends JPanel{
         int windowHeight = 350;
         File myFile;
 
-        static JFrame frame = new JFrame("TEST BUILD");
+        static JFrame frame = new JFrame("Final Build");
 
 
         MainWindow(){
@@ -195,11 +195,25 @@ class Client extends JPanel{
                // System.out.println("exit button clicked");
                     try{
 
-                        Pie.getPie(loadFile4Buttons.getText());
-
+                        c.dataOut.writeUTF("pie " + loadFile4Buttons.getText());
+                        c.dataOut.flush();
                         
                     }catch(Exception ex){
                         System.err.println(ex + " Exception at loadfile (pie) button");
+                    }
+                }          
+            }); 
+
+               hisButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+               // System.out.println("exit button clicked");
+                    try{
+
+                        c.dataOut.writeUTF("his");
+                        c.dataOut.flush();
+                        
+                    }catch(Exception ex){
+                        System.err.println(ex + " Exception at loadfile (his) button");
                     }
                 }          
             }); 
@@ -213,7 +227,7 @@ class Client extends JPanel{
                         c.dataOut.flush();
                         
                     }catch(Exception ex){
-                        System.err.println(ex + " Exception at loadfile (pie) button");
+                        System.err.println(ex + " Exception at loadfile (topk) button");
                     }
                 }          
             }); 

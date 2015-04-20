@@ -21,6 +21,10 @@ public class His extends JPanel {
     public static void main(String[] argv) {
         MainWindow1 x = new MainWindow1();
     }
+
+    static public void run(){
+        MainWindow1 x = new MainWindow1();
+    }
 }
 
 class MainWindow1 extends JPanel {
@@ -117,7 +121,7 @@ class graph extends JComponent {
         int x2Points[] = {40, 40, 300, 250};
         int y2Points[] = {40, 300, 300, 300};
         GeneralPath polyline
-                = new GeneralPath(GeneralPath.WIND_EVEN_ODD, x2Points.length);
+        = new GeneralPath(GeneralPath.WIND_EVEN_ODD, x2Points.length);
 
         polyline.moveTo(x2Points[0], y2Points[0]);
 
