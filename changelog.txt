@@ -1,3 +1,6 @@
+v2.6
+added top K
+
 v2.5.1 
 redid layout
 

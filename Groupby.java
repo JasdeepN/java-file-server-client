@@ -103,20 +103,28 @@ public class Groupby implements IGroupBy {
 
     public void printTopK(int k) {
         DecimalFormat df = new DecimalFormat("$###,###,000,000.00");
-
+        String temp = null;
+        List<String> print = new ArrayList<String>();
         int count = 0;
+        print.add("<html>");
+        print.add("TOP " + k + "<BR><BR>");
         Iterator it = sortmap.entrySet().iterator();
         while (it.hasNext()) {
             if (count < k) {
                 Map.Entry pair = (Map.Entry) it.next();
-                System.out.print(pair.getKey() + " = ");
+                temp = (pair.getKey() + " = ");
                 float m = (float) pair.getValue();
-                System.out.println(df.format(m));
+                temp = temp + (df.format(m));
+                print.add(temp + "<BR>");
+                temp = null;
                 count++;
+
             } else if (count == k) {
                 break;
             }
         }
+        print.add("</html>");
+        popupMsg msg = new popupMsg(print);
     }
 
     public static int numberOfRecords(List<Record> records) {

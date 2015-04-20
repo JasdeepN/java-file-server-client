@@ -65,6 +65,9 @@ class Client extends JPanel{
             JPanel buttonpanel = new JPanel(new FlowLayout());
             JPanel tertiaryPanel = new JPanel(new BorderLayout());
 
+            String[] sort = new String[] {"sector", "employer", "position", "name"};
+            JComboBox<String> comboSort = new JComboBox<String>(sort);
+
 
        // JPanel panel2 = new JPanel(new GridLayout(1, 3));
             JPanel serverPanel = new JPanel(new FlowLayout());
@@ -119,10 +122,11 @@ class Client extends JPanel{
             buttonpanel.add(availbutton);
             buttonpanel.add(pieButton);
             fileServer.add(loadFile4Buttons);
-            
+
             buttonpanel.add(hisButton);
             buttonpanel.add(topKButton);
             buttonpanel.add(kbox);
+            buttonpanel.add(comboSort);
 
 
             sendPanel.add(sendButton);
@@ -193,6 +197,20 @@ class Client extends JPanel{
 
                         Pie.getPie(loadFile4Buttons.getText());
 
+                        
+                    }catch(Exception ex){
+                        System.err.println(ex + " Exception at loadfile (pie) button");
+                    }
+                }          
+            }); 
+
+            topKButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+               // System.out.println("exit button clicked");
+                    try{
+
+                        c.dataOut.writeUTF("top " + loadFile4Buttons.getText()+ " " +comboSort.getSelectedItem().toString() + " " +kbox.getText());
+                        c.dataOut.flush();
                         
                     }catch(Exception ex){
                         System.err.println(ex + " Exception at loadfile (pie) button");

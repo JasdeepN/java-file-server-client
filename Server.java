@@ -12,6 +12,8 @@ class Server{
     static ServerSocket main; 
     static Socket socket; 
     static String load = "(load\\s(.*))";
+    static String top = "(top)\\s(.*)\\s(.*)\\s(.*)";
+
 
     static List<String> logs = new ArrayList<String>();
 
@@ -26,8 +28,10 @@ class Server{
     static class User extends Thread {
 
         String input = null;
-        String filePath = null;
+        String filePath = null, a = null, b = null, c = null;
         Pattern loadfile = Pattern.compile(load);
+        Pattern loadtop = Pattern.compile(top);
+
         static DataInputStream dataIn; 
         static DataOutputStream dataOut;
 
@@ -49,11 +53,19 @@ class Server{
                     input = dataIn.readUTF().toLowerCase();
 
                     Matcher matLoad = loadfile.matcher(input);
+                    Matcher matTop = loadtop.matcher(input);
 
 
                     while (matLoad.find()){
                         input = "load";
                         filePath = (matLoad.group(2));
+                    } 
+
+                     while (matTop.find()){
+                        input = "top";
+                        a = (matTop.group(2));
+                        b = (matTop.group(3));
+                        c = (matTop.group(4));
                     } 
 
                     switch (input) {
@@ -73,6 +85,10 @@ class Server{
                         case "files":
                         final File folder = new File("server_data/");
                         listFilesForFolder(folder);
+                        break;
+
+                        case "top":
+                        Top.run(a,b, Integer.parseInt(c));
                         break;
 
                         case "cmd":
