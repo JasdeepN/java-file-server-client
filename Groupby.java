@@ -124,7 +124,7 @@ public class Groupby implements IGroupBy {
             }
         }
         print.add("</html>");
-        popupMsg msg = new popupMsg(print);
+        popupMsg msg = new popupMsg(print, "temp name", 400, 300);
     }
 
     public static int numberOfRecords(List<Record> records) {

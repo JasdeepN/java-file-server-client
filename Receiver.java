@@ -17,7 +17,7 @@ class Receiver extends Thread {
     static synchronized public void reciveData(){
         try {
             returnData = x.readUTF();
-            popupMsg x = new popupMsg(returnData);
+            popupMsg x = new popupMsg(returnData, "placeholder", 300, 400);
         } catch(Exception e) {
             System.out.println("connection to server terminated");
             server = false;

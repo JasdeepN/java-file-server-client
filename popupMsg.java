@@ -26,11 +26,9 @@ import java.nio.file.Paths;
  */
 
 class popupMsg extends JPanel{
-	//name of popup
-	int windowWidth = 400;
-	int windowHeight = 300;
-	popupMsg(String x){
-		JFrame popup = new JFrame("alert"); //MAKE NAME CHANGE BASED ON CALLING METHOD (CHANGE CONSTRUCTOR)
+
+	popupMsg(String x, String windowName, int windowWidth, int windowHeight){
+		final JFrame popup = new JFrame(windowName); //MAKE NAME CHANGE BASED ON CALLING METHOD (CHANGE CONSTRUCTOR)
 
 		setLayout(new BorderLayout());
 
@@ -48,6 +46,7 @@ class popupMsg extends JPanel{
 		popup.add(exitPanel, BorderLayout.SOUTH);
 		popup.add(mainPopPanel, BorderLayout.NORTH);
 		popup.setVisible(true);
+		
 		okButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				popup.setVisible(false);
@@ -55,8 +54,8 @@ class popupMsg extends JPanel{
 		}); 
 	}
 
-	popupMsg(java.util.List<String> x){
-		JFrame popup = new JFrame("alert");
+	popupMsg(java.util.List<String> x, String windowName, int windowWidth, int windowHeight){
+		final JFrame popup = new JFrame(windowName);
 
 		Object[] y = x.toArray();
 		setLayout(new BorderLayout());
@@ -80,6 +79,7 @@ class popupMsg extends JPanel{
 		popup.add(exitPanel, BorderLayout.SOUTH);
 		popup.add(mainPopPanel, BorderLayout.NORTH);
 		popup.setVisible(true);
+
 		okButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				popup.setVisible(false);

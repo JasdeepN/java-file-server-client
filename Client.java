@@ -76,10 +76,10 @@ class Client extends JPanel{
             JPanel secondaryPanel = new JPanel(new BorderLayout());
             JPanel dataPanel = new JPanel(new FlowLayout());
 
-            JTextField sendField = new JTextField("TEXT COMMANDS ONLY", 20);
+            final JTextField sendField = new JTextField("TEXT COMMANDS ONLY", 20);
             JTextField loadFile4Buttons = new JTextField("FILE NAME", 20);
-            JTextField ipBox = new JTextField("127.0.0.1", 10);
-            JTextField portBox = new JTextField("3000", 5);
+            final JTextField ipBox = new JTextField("127.0.0.1", 10);
+            final JTextField portBox = new JTextField("3000", 5);
             JTextField kbox = new JTextField("5", 3);
 
             frame.setLayout(new BorderLayout(windowWidth, windowHeight));
@@ -160,17 +160,17 @@ class Client extends JPanel{
                     if (isConnected == true){
                         serverView x = new serverView();
                     } else {
-                        popupMsg x = new popupMsg("connect to server first");
+                        popupMsg x = new popupMsg("connect to server first", "server error", 400, 300);
                     }
                 }          
             }); 
 
-             serverButton.addActionListener(new ActionListener() {
+            serverButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e){
                     if (isConnected == true){
                         serverLog x = new serverLog();
                     } else {
-                        popupMsg x = new popupMsg("no logs to show - connect to a server");
+                        popupMsg x = new popupMsg("no logs to show - connect to a server", "server error", 400, 300);
                     }
                 }          
             }); 
@@ -248,45 +248,45 @@ class Client extends JPanel{
 
             */
 
-            availbutton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+availbutton.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
                // System.out.println("exit button clicked");
-                    try{
-                        try{
-                        c.dataOut.writeUTF("files");
-                        c.dataOut.flush();
-                    }catch(IOException ex){
-                        System.err.println(ex+"IOException at availbutton button");
-                    }
+        try{
+            try{
+                c.dataOut.writeUTF("files");
+                c.dataOut.flush();
+            }catch(IOException ex){
+                System.err.println(ex+"IOException at availbutton button");
+            }
 
-                    }catch(NullPointerException m){
-                        System.err.println("NullPointerException at availbutton");
-                    }
-                }          
-            });
-
-
-
-            serverConnect.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    String ip = ipBox.getText();
-                    String strPort = portBox.getText();
-                    int intPort = Integer.parseInt(strPort);
-                    try {
-                //System.out.println("reconnect");
-                        c = new Client(ip, intPort);
-                        c.connect(); 
-                        isConnected = true;
-                        popupMsg x = new popupMsg("connected");
-                        serverView.updateServer("connected");
-                //System.out.println("connect");
-                    } catch (Exception x){
-                        System.err.println("error connecting to server");
-                    }
-                }     
-            }); 
-
+        }catch(NullPointerException m){
+            System.err.println("NullPointerException at availbutton");
         }
+    }          
+});
 
-    }
+
+
+serverConnect.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        String ip = ipBox.getText();
+        String strPort = portBox.getText();
+        int intPort = Integer.parseInt(strPort);
+        try {
+                //System.out.println("reconnect");
+            c = new Client(ip, intPort);
+            c.connect(); 
+            isConnected = true;
+            popupMsg x = new popupMsg("connected", "success", 400, 300);
+            serverView.updateServer("connected");
+                //System.out.println("connect");
+        } catch (Exception x){
+            System.err.println("error connecting to server");
+        }
+    }     
+}); 
+
+}
+
+}
 }

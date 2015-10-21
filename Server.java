@@ -90,7 +90,7 @@ class Server{
                         outS.add("sendFile - the next thing sent will <BR>go to the file reciever<BR><BR>");
                         outS.add("files - shows the current list of accessible<BR> files for the server</html>");
                         
-                        popupMsg commands = new popupMsg(outS);
+                        popupMsg commands = new popupMsg(outS, "commands", 400, 300);
                         break;
 
                         default:
@@ -105,7 +105,7 @@ class Server{
                     try{
                         s.serve();
                     }catch (Exception ex2){
-                        popupMsg msg = new popupMsg(ex2 + " in server");
+                        popupMsg msg = new popupMsg(ex2 + " in server", "error", 400, 300);
                     }
 
                 }
@@ -151,7 +151,7 @@ class Server{
             }
         }
         x.add("</html>");
-        popupMsg files = new popupMsg(x);
+        popupMsg files = new popupMsg(x, "file viewer", 400, 300);
     }
 
 
