@@ -115,7 +115,7 @@ class fileSender extends JPanel {
             public void actionPerformed(ActionEvent e) {
                // System.out.println("exit button clicked");
                 //System.exit(0);
-                fileFrame.setVisible(false);
+                fileFrame.dispose();
 
             }          
         });

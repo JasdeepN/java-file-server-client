@@ -54,7 +54,7 @@ class Client extends JPanel{
         int windowHeight = 250;
         File myFile;
 
-        static JFrame frame = new JFrame("Final Build");
+        static JFrame frame = new JFrame("Client Build v2.8.1");
 
 
         MainWindow(){

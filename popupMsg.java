@@ -72,6 +72,7 @@ class popupMsg extends JPanel{
 		for(int count = 0; count < x.size(); count++){
 			output =  output + y[count].toString();
 		}
+		
 		JLabel msg = new JLabel(output, SwingConstants.CENTER);
 		JButton okButt = new JButton("OK");
 		mainPopPanel.add(msg, BorderLayout.CENTER);

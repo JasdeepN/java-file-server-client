@@ -142,7 +142,7 @@ class Server{
 
     static public void listFilesForFolder(final File folder) {
         List<String> x = new ArrayList<String>();
-        x.add("<html>files currently on the server:<br>");
+        x.add("<html>");
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry);
@@ -151,7 +151,7 @@ class Server{
             }
         }
         x.add("</html>");
-        popupMsg files = new popupMsg(x, "file viewer", 400, 300);
+        popupMsg files = new popupMsg(x, "files available on server", 400, 300);
     }
 
 
