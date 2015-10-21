@@ -16,11 +16,21 @@ import java.awt.event.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * @author Jasdeep Nijjar
+ *
+ * @descritption Creates a new windows to display a message that was sent to the method 
+ *
+ * @pram String X, where X is the message to be displayed on the new window
+ * @pram util List of type String, a list of messages to be displayed useful to save multiple messages and display them at once	 
+ */
+
 class popupMsg extends JPanel{
-	JFrame popup = new JFrame("MESSAGE FROM SERVER");
+	//name of popup
 	int windowWidth = 400;
 	int windowHeight = 300;
 	popupMsg(String x){
+		JFrame popup = new JFrame("alert"); //MAKE NAME CHANGE BASED ON CALLING METHOD (CHANGE CONSTRUCTOR)
 
 		setLayout(new BorderLayout());
 
@@ -46,6 +56,8 @@ class popupMsg extends JPanel{
 	}
 
 	popupMsg(java.util.List<String> x){
+		JFrame popup = new JFrame("alert");
+
 		Object[] y = x.toArray();
 		setLayout(new BorderLayout());
 

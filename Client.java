@@ -16,6 +16,7 @@ import java.awt.event.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+//CLIENT
 
 class Client extends JPanel{
     static Socket socket;
@@ -26,6 +27,7 @@ class Client extends JPanel{
     OutputStream out;
     static DataInputStream dataIn;
     DataOutputStream dataOut; 
+    static boolean isConnected = false;
 
     public Client(String hostname, int port) throws Exception {
         this.socket = new Socket(hostname, port);
@@ -65,11 +67,7 @@ class Client extends JPanel{
             JPanel buttonpanel = new JPanel(new FlowLayout());
             JPanel tertiaryPanel = new JPanel(new BorderLayout());
 
-            String[] sort = new String[] {"sector", "employer", "position", "name"};
-            JComboBox<String> comboSort = new JComboBox<String>(sort);
 
-
-       // JPanel panel2 = new JPanel(new GridLayout(1, 3));
             JPanel serverPanel = new JPanel(new FlowLayout());
             JPanel fileServer = new JPanel(new FlowLayout());
 
@@ -94,11 +92,9 @@ class Client extends JPanel{
             JButton serverConnect = new JButton("CONNECT TO SERVER");
             JButton sendButton = new JButton("SEND");
             JButton fileSender = new JButton("FILE SENDER");
-            JButton pieButton = new JButton("PIE");
-            JButton hisButton = new JButton("HIS");
-            JButton topKButton = new JButton("TOP K");
-
+            JButton showServerData = new JButton("SERVER STATUS"); 
             JButton availbutton = new JButton("SHOW FILES");
+            JButton serverButton = new JButton("SERVER LOGS");
 
             mainPanel.setBackground(Color.GRAY);
             fileServer.setBackground(Color.GRAY);
@@ -109,23 +105,23 @@ class Client extends JPanel{
             buttonpanel.setBackground(Color.GRAY);
 
             String pleasewait = "please be patient server may take some time to calculate</html>";
-            JLabel reserved = new JLabel("<html>if server does not respond, try reconnecting<BR>" + pleasewait);
+            String serverRespond = "<html>if server does not respond, try reconnecting<BR>";
+            JLabel reserved = new JLabel(serverRespond + pleasewait);
 
             dataPanel.add(reserved);
             buttonpanel.add(availbutton);
-            buttonpanel.add(pieButton);
             fileServer.add(loadFile4Buttons);
 
-            buttonpanel.add(hisButton);
-            buttonpanel.add(topKButton);
             buttonpanel.add(kbox);
-            buttonpanel.add(comboSort);
+            buttonpanel.add(serverButton);
 
 
             sendPanel.add(sendButton);
             sendPanel.add(sendField);
             sendPanel.add(fileSender);
             exitPanel.add(exitButton);
+
+            serverPanel.add(showServerData);
             serverPanel.add(serverConnect);
             serverPanel.add(ipBox);
             serverPanel.add(portBox);
@@ -159,14 +155,32 @@ class Client extends JPanel{
                 }          
             }); 
 
-            fileSender.addActionListener(new ActionListener() {
+            showServerData.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e){
-
-
-                    fileSender r = new fileSender();
+                    if (isConnected == true){
+                        serverView x = new serverView();
+                    } else {
+                        popupMsg x = new popupMsg("connect to server first");
+                    }
                 }          
             }); 
 
+             serverButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e){
+                    if (isConnected == true){
+                        serverLog x = new serverLog();
+                    } else {
+                        popupMsg x = new popupMsg("no logs to show - connect to a server");
+                    }
+                }          
+            }); 
+
+
+            fileSender.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e){
+                    fileSender r = new fileSender();
+                }          
+            }); 
 
             exitButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -175,14 +189,21 @@ class Client extends JPanel{
                         c.dataOut.writeUTF("exit");
                         c.dataOut.flush();
                         System.exit(0);
-                    }catch(IOException ex){
-                        System.err.println("IOException at exit button");
+                    }catch(Exception ex){
+                        System.err.println("unhandled exception at exit button (server not connected?)");
                         System.exit(0);
 
                     }
                 }          
             }); 
 
+            
+            /**
+            * @ removed funtionality
+            **/
+
+
+            /* 
             pieButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                // System.out.println("exit button clicked");
@@ -225,14 +246,21 @@ class Client extends JPanel{
                 }          
             }); 
 
+            */
+
             availbutton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                // System.out.println("exit button clicked");
                     try{
+                        try{
                         c.dataOut.writeUTF("files");
                         c.dataOut.flush();
                     }catch(IOException ex){
                         System.err.println(ex+"IOException at availbutton button");
+                    }
+
+                    }catch(NullPointerException m){
+                        System.err.println("NullPointerException at availbutton");
                     }
                 }          
             });
@@ -248,6 +276,9 @@ class Client extends JPanel{
                 //System.out.println("reconnect");
                         c = new Client(ip, intPort);
                         c.connect(); 
+                        isConnected = true;
+                        popupMsg x = new popupMsg("connected");
+                        serverView.updateServer("connected");
                 //System.out.println("connect");
                     } catch (Exception x){
                         System.err.println("error connecting to server");

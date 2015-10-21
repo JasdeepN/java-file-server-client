@@ -11,7 +11,7 @@ import java.awt.GridLayout;
 import javax.swing.JFrame;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
-import java.awt.*;
+//import java.awt.*;
 import java.awt.event.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;

@@ -4,16 +4,13 @@ import java.util.regex.*;
 import java.util.*;
 import java.nio.*;
 
-
-
 class Server{
     //server has access
     static Server s;
     static ServerSocket main; 
     static Socket socket; 
     static String load = "(load\\s(.*))";
-    static String top = "(top)\\s(.*)\\s(.*)\\s(.*)";
-    static String pie = "(pie)\\s(.*)";
+
 
 
 
@@ -32,8 +29,7 @@ class Server{
         String input = null;
         String filePath = null, a = null, b = null, c = null;
         Pattern loadfile = Pattern.compile(load);
-        Pattern loadtop = Pattern.compile(top);
-        Pattern loadpie = Pattern.compile(pie);
+        
 
 
         static DataInputStream dataIn; 
@@ -57,8 +53,7 @@ class Server{
                     input = dataIn.readUTF().toLowerCase();
 
                     Matcher matLoad = loadfile.matcher(input);
-                    Matcher matTop = loadtop.matcher(input);
-                    Matcher matPie = loadpie.matcher(input);
+                
 
 
 
@@ -67,17 +62,6 @@ class Server{
                         filePath = (matLoad.group(2));
                     }
 
-                    while (matPie.find()){
-                        input = "pie";
-                        a = (matPie.group(2));
-                    } 
-
-                    while (matTop.find()){
-                        input = "top";
-                        a = (matTop.group(2));
-                        b = (matTop.group(3));
-                        c = (matTop.group(4));
-                    } 
 
                     switch (input) {
                         case "exit": 
@@ -93,21 +77,9 @@ class Server{
                         recieveFile();
                         break;
 
-                        case "his":
-                        His.run();
-                        break;
-
-                        case "pie":
-                        Pie.getPie(a);
-                        break;
-
                         case "files":
                         final File folder = new File("server_data/");
                         listFilesForFolder(folder);
-                        break;
-
-                        case "top":
-                        Top.run(a,b, Integer.parseInt(c));
                         break;
 
                         case "cmd":
@@ -195,6 +167,11 @@ class Server{
 
             (new User(dataIn, dataOut)).start();
         } 
+    }
+
+    public void autoUpdateServerlog(){ //auto update server logs for output to serverview/serverlog window
+        Timer x = new Timer();
+
     }
 
     public static void main(String[] args) throws Exception {
