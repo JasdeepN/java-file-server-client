@@ -24,7 +24,7 @@ class serverLog extends JPanel{
 
 	public static void main (String[] args){
 		System.out.println("server log");
-		serverLog window = new serverLog();
+		//serverLog window = new serverLog();
 	}
 
 	int windowWidth = 500;

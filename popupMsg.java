@@ -49,7 +49,7 @@ class popupMsg extends JPanel{
 		
 		okButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				popup.setVisible(false);
+				popup.dispose();
 			}
 		}); 
 	}
@@ -82,7 +82,7 @@ class popupMsg extends JPanel{
 
 		okButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				popup.setVisible(false);
+				popup.dispose();
 			}
 		}); 
 	}

@@ -19,16 +19,19 @@ import java.nio.file.Paths;
 class serverView extends JPanel{
 	static JLabel label = new JLabel();
 	static String msg = "";
-	static JFrame mainFrame = new JFrame("server output");
+
+	static JFrame mainFrame; 
 
 	public static void main (String[] args){
 		System.out.println("server view");
-		serverView window = new serverView();
+		//serverView window = new serverView();
 	}
 
 	int windowWidth = 500;
 	int windowHeight = 300;
+
 	serverView(){
+		mainFrame = new JFrame("server output");
 		setLayout(new BorderLayout());
 
 		mainFrame.add(label);
@@ -38,7 +41,7 @@ class serverView extends JPanel{
 		mainFrame.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setResizable(false);
-		mainFrame.setVisible(true);
+		mainFrame.setVisible(false);
 
 	}
 
