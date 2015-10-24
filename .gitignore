@@ -3,3 +3,5 @@ Final Project.pdf
 Final Project.docx
 Report.pdf
 *.class
+.vscode
+.gitignore

@@ -51,7 +51,7 @@ class fileSender extends JPanel {
     int windowWidth = 500;
     int windowHeight = 125;
 
-    static JFrame fileFrame = new JFrame("FILE SENDER");
+    static JFrame fileFrame = new JFrame("File Manager v2.8.1");
 
     JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -83,6 +83,7 @@ class fileSender extends JPanel {
         JButton gobackButton = new JButton("BACK"); 
         JButton sendFileButton = new JButton("SEND FILE");
         JButton serverConnect = new JButton("CONNECT TO FILE SERVER");
+        JButton availbutton = new JButton("SHOW FILES");
 
 
         mainPanel.setBackground(Color.GRAY);
@@ -94,6 +95,7 @@ class fileSender extends JPanel {
         serverPanel.add(ipBox);
         serverPanel.add(portBox);
         exitPanel.add(gobackButton);
+        sendFilePanel.add(availbutton);
         sendFilePanel.add(fileField);
         sendFilePanel.add(sendFileButton);
 
@@ -120,6 +122,23 @@ class fileSender extends JPanel {
             }          
         });
 
+        availbutton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // System.out.println("exit button clicked");
+                try{
+                    try{
+                        dataOut.writeUTF("files");
+                        dataOut.flush();
+                    }catch(IOException ex){
+                        System.err.println(ex+"IOException at availbutton button");
+                    }
+
+                }catch(NullPointerException m){
+                    System.err.println("NullPointerException at availbutton");
+                }
+            }          
+        });
+
         sendFileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 try{
@@ -138,8 +157,8 @@ class fileSender extends JPanel {
                 try {
                 //System.out.println("reconnect");
                     connect(ip, intPort);
-                   Receiver getData = new Receiver(fileSender.dataIn);
-                        getData.start();
+                    Receiver getData = new Receiver(fileSender.dataIn);
+                    getData.start();
                 //System.out.println("connect");
                 } catch (Exception x){
                     System.err.println("error connecting to server");

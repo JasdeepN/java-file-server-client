@@ -22,7 +22,7 @@ import java.nio.file.Paths;
  * @descritption Creates a new windows to display a message that was sent to the method 
  *
  * @pram String X, where X is the message to be displayed on the new window
- * @pram util List of type String, a list of messages to be displayed useful to save multiple messages and display them at once	 
+ * @pram util List of type String (java.util.List<String> x), a list of messages to be displayed useful to save multiple messages and display them at once	 
  */
 
 class popupMsg extends JPanel{
@@ -72,7 +72,7 @@ class popupMsg extends JPanel{
 		for(int count = 0; count < x.size(); count++){
 			output =  output + y[count].toString();
 		}
-		
+
 		JLabel msg = new JLabel(output, SwingConstants.CENTER);
 		JButton okButt = new JButton("OK");
 		mainPopPanel.add(msg, BorderLayout.CENTER);

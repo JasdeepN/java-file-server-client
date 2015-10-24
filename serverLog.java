@@ -19,7 +19,7 @@ import java.nio.file.Paths;
 class serverLog extends JPanel{
 	static JLabel label = new JLabel();
 	static String msg = "";
-	static JFrame mainFrame = new JFrame("server logs");
+	static JFrame mainFrame = new JFrame("server logs")
     static List<String> logs = new ArrayList<String>();
 
 	public static void main (String[] args){

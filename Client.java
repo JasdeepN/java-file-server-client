@@ -80,7 +80,6 @@ class Client extends JPanel{
             JTextField loadFile4Buttons = new JTextField("FILE NAME", 20);
             final JTextField ipBox = new JTextField("127.0.0.1", 10);
             final JTextField portBox = new JTextField("3000", 5);
-            JTextField kbox = new JTextField("5", 3);
 
             frame.setLayout(new BorderLayout(windowWidth, windowHeight));
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,7 +92,6 @@ class Client extends JPanel{
             JButton sendButton = new JButton("SEND");
             JButton fileSender = new JButton("FILE SENDER");
             JButton showServerData = new JButton("SERVER STATUS"); 
-            JButton availbutton = new JButton("SHOW FILES");
             JButton serverButton = new JButton("SERVER LOGS");
 
             mainPanel.setBackground(Color.GRAY);
@@ -109,10 +107,8 @@ class Client extends JPanel{
             JLabel reserved = new JLabel(serverRespond + pleasewait);
 
             dataPanel.add(reserved);
-            buttonpanel.add(availbutton);
             fileServer.add(loadFile4Buttons);
 
-            buttonpanel.add(kbox);
             buttonpanel.add(serverButton);
 
 
@@ -170,7 +166,7 @@ class Client extends JPanel{
                     if (isConnected == true){
                         serverLog x = new serverLog();
                     } else {
-                        popupMsg x = new popupMsg("no logs to show - connect to a server", "server error", 400, 300);
+                        popupMsg x = new popupMsg("no logs to show - connect to a server", "server error", 400, 100);
                     }
                 }          
             }); 
@@ -248,23 +244,6 @@ class Client extends JPanel{
 
             */
 
-availbutton.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent e) {
-               // System.out.println("exit button clicked");
-        try{
-            try{
-                c.dataOut.writeUTF("files");
-                c.dataOut.flush();
-            }catch(IOException ex){
-                System.err.println(ex+"IOException at availbutton button");
-            }
-
-        }catch(NullPointerException m){
-            System.err.println("NullPointerException at availbutton");
-        }
-    }          
-});
-
 
 
 serverConnect.addActionListener(new ActionListener() {
@@ -281,7 +260,7 @@ serverConnect.addActionListener(new ActionListener() {
             serverView.updateServer("connected");
                 //System.out.println("connect");
         } catch (Exception x){
-            System.err.println("error connecting to server");
+            System.err.println("could not connect to server (is it on?)");
         }
     }     
 }); 
