@@ -54,7 +54,7 @@ class Client extends JPanel{
         int windowHeight = 250;
         File myFile;
 
-        static JFrame frame = new JFrame("Client Build v2.8.1");
+        static JFrame frame = new JFrame("Client Build v2.8.2");
 
 
         MainWindow(){
@@ -102,11 +102,11 @@ class Client extends JPanel{
             tertiaryPanel.setBackground(Color.GRAY);
             buttonpanel.setBackground(Color.GRAY);
 
-            String pleasewait = "please be patient server may take some time to calculate</html>";
-            String serverRespond = "<html>if server does not respond, try reconnecting<BR>";
-            JLabel reserved = new JLabel(serverRespond + pleasewait);
+           // String pleasewait = "please be patient server may take some time to calculate</html>";
+            //String serverRespond = "<html>if server does not respond, try reconnecting<BR>";
+            //JLabel reserved = new JLabel(serverRespond + pleasewait);
 
-            dataPanel.add(reserved);
+           // dataPanel.add(reserved);
             fileServer.add(loadFile4Buttons);
 
             buttonpanel.add(serverButton);
@@ -123,7 +123,7 @@ class Client extends JPanel{
             serverPanel.add(portBox);
             secondaryPanel.add(sendPanel, BorderLayout.NORTH);
             secondaryPanel.add(fileServer, BorderLayout.CENTER);
-            tertiaryPanel.add(dataPanel, BorderLayout.SOUTH);
+           // tertiaryPanel.add(dataPanel, BorderLayout.SOUTH);
 
             tertiaryPanel.add(secondaryPanel, BorderLayout.NORTH);
             tertiaryPanel.add(buttonpanel, BorderLayout.CENTER);
@@ -156,7 +156,7 @@ class Client extends JPanel{
                     if (isConnected == true){
                         serverView x = new serverView();
                     } else {
-                        popupMsg x = new popupMsg("connect to server first", "server error", 400, 300);
+                        popupMsg x = new popupMsg("connect to server first", "server error", 400, 100);
                     }
                 }          
             }); 
@@ -193,9 +193,30 @@ class Client extends JPanel{
                 }          
             }); 
 
+            serverConnect.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String ip = ipBox.getText();
+                    String strPort = portBox.getText();
+                    int intPort = Integer.parseInt(strPort);
+                    try {
+                //System.out.println("reconnect");
+                        c = new Client(ip, intPort);
+                        c.connect(); 
+                        isConnected = true;
+                        popupMsg x = new popupMsg("connected", "success", 400, 100);
+                        serverView.updateServer("connected");
+                //System.out.println("connect");
+                    } catch (Exception x){
+                        popupMsg y = new popupMsg("Failure, is the server running?", "error", 400, 100);
+                        serverView.updateServer("failure");
+                        System.err.println("could not connect to server (is it on?)");
+                    }
+                }     
+            });
             
             /**
             * @ removed funtionality
+            * PIE HISTOGRAM AND TOP K ACTIONS LISTENERS
             **/
 
 
@@ -245,25 +266,6 @@ class Client extends JPanel{
             */
 
 
-
-serverConnect.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent e) {
-        String ip = ipBox.getText();
-        String strPort = portBox.getText();
-        int intPort = Integer.parseInt(strPort);
-        try {
-                //System.out.println("reconnect");
-            c = new Client(ip, intPort);
-            c.connect(); 
-            isConnected = true;
-            popupMsg x = new popupMsg("connected", "success", 400, 300);
-            serverView.updateServer("connected");
-                //System.out.println("connect");
-        } catch (Exception x){
-            System.err.println("could not connect to server (is it on?)");
-        }
-    }     
-}); 
 
 }
 
