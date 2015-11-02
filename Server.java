@@ -69,8 +69,8 @@ class Server{
                         break;
 
                         case "load":
-                        ParseFile parser = new ParseFile();
-                        parser.load(filePath);
+                        //ParseFile parser = new ParseFile();
+                        //parser.load(filePath);
                         break;
 
                         case "sendfile":
@@ -90,11 +90,11 @@ class Server{
                         outS.add("sendFile - the next thing sent will <BR>go to the file reciever<BR><BR>");
                         outS.add("files - shows the current list of accessible<BR> files for the server</html>");
                         
-                        popupMsg commands = new popupMsg(outS, "commands", 400, 300);
+                        popupMsg commands = new popupMsg(outS, "commands", 150, 300);
                         break;
 
                         default:
-                            //System.out.println(input);
+                        //System.out.println(input);
                         dataOut.writeUTF("Invalid Input use <cmd> to see a list of commands");
                         dataOut.flush();
                         break;
