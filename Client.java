@@ -51,7 +51,7 @@ class Client extends JPanel{
 
         static Client c;
         int windowWidth = 500;
-        int windowHeight = 250;
+        int windowHeight = 175;
         File myFile;
 
         static JFrame frame = new JFrame("Client Build v2.8.2");
@@ -74,7 +74,7 @@ class Client extends JPanel{
             JPanel sendPanel = new JPanel (new FlowLayout());
             JPanel exitPanel = new JPanel(new FlowLayout());
             JPanel secondaryPanel = new JPanel(new BorderLayout());
-            JPanel dataPanel = new JPanel(new FlowLayout());
+            //JPanel dataPanel = new JPanel(new FlowLayout());
 
             final JTextField sendField = new JTextField("TEXT COMMANDS ONLY", 20);
             JTextField loadFile4Buttons = new JTextField("FILE NAME", 20);
@@ -111,13 +111,13 @@ class Client extends JPanel{
 
             buttonpanel.add(serverButton);
 
-
-            sendPanel.add(sendButton);
-            sendPanel.add(sendField);
             sendPanel.add(fileSender);
-            exitPanel.add(exitButton);
+            sendPanel.add(sendField);
+            sendPanel.add(sendButton);
 
-            serverPanel.add(showServerData);
+            exitPanel.add(exitButton);
+            exitPanel.add(showServerData);
+
             serverPanel.add(serverConnect);
             serverPanel.add(ipBox);
             serverPanel.add(portBox);
@@ -213,7 +213,7 @@ class Client extends JPanel{
                     }
                 }     
             });
-            
+
             /**
             * @ removed funtionality
             * PIE HISTOGRAM AND TOP K ACTIONS LISTENERS
