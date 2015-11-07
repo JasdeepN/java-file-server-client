@@ -31,23 +31,28 @@ class popupMsg extends JPanel{
 		final JFrame popup = new JFrame(windowName); //MAKE NAME CHANGE BASED ON CALLING METHOD (CHANGE CONSTRUCTOR)
 
 		setLayout(new BorderLayout());
-		popup.setBackground(Color.GRAY);
+		popup.getContentPane().setBackground(Color.GRAY); //does nothing?
+		JPanel mainPopPanel = new JPanel(new FlowLayout());
+		JPanel exitPanel = new JPanel(new FlowLayout());
+
+		mainPopPanel.setBackground(Color.GRAY);
+		exitPanel.setBackground(Color.GRAY);
 
 		popup.setLayout(new BorderLayout(windowWidth, windowHeight));
 		popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		popup.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
 		popup.setLocationRelativeTo(null);
 		popup.setResizable(false);
-		JPanel mainPopPanel = new JPanel(new FlowLayout());
-		JPanel exitPanel = new JPanel(new FlowLayout());
-		mainPopPanel.setBackground(Color.GRAY);
-		exitPanel.setBackground(Color.GRAY);
+		
 		JLabel msg = new JLabel(x);
 		JButton okButt = new JButton("OK");
+		
 		mainPopPanel.add(msg, BorderLayout.CENTER);
-		exitPanel.add(okButt, BorderLayout.CENTER);
+		exitPanel.add(okButt, BorderLayout.SOUTH);
+
 		popup.add(exitPanel, BorderLayout.SOUTH);
 		popup.add(mainPopPanel, BorderLayout.NORTH);
+
 		popup.setVisible(true);
 		
 		okButt.addActionListener(new ActionListener() {
@@ -62,23 +67,28 @@ class popupMsg extends JPanel{
 
 		Object[] y = x.toArray();
 		setLayout(new BorderLayout());
-		popup.setBackground(Color.GRAY);		
+		popup.setBackground(Color.GRAY);
+
 		popup.setLayout(new BorderLayout(windowWidth, windowHeight));
 		popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		popup.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
 		popup.setLocationRelativeTo(null);
 		popup.setResizable(false);
+
 		JPanel mainPopPanel = new JPanel(new FlowLayout());
 		JPanel exitPanel = new JPanel(new FlowLayout());
 		String output = "";
+
 		mainPopPanel.setBackground(Color.GRAY);
 		exitPanel.setBackground(Color.GRAY);
+
 		for(int count = 0; count < x.size(); count++){
 			output =  output + y[count].toString();
 		}
 
 		JLabel msg = new JLabel(output, SwingConstants.CENTER);
 		JButton okButt = new JButton("OK");
+
 		mainPopPanel.add(msg, BorderLayout.CENTER);
 		exitPanel.add(okButt, BorderLayout.CENTER);
 		popup.add(exitPanel, BorderLayout.SOUTH);
