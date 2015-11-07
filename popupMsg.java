@@ -31,6 +31,7 @@ class popupMsg extends JPanel{
 		final JFrame popup = new JFrame(windowName); //MAKE NAME CHANGE BASED ON CALLING METHOD (CHANGE CONSTRUCTOR)
 
 		setLayout(new BorderLayout());
+		popup.setBackground(Color.GRAY);
 
 		popup.setLayout(new BorderLayout(windowWidth, windowHeight));
 		popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -39,6 +40,8 @@ class popupMsg extends JPanel{
 		popup.setResizable(false);
 		JPanel mainPopPanel = new JPanel(new FlowLayout());
 		JPanel exitPanel = new JPanel(new FlowLayout());
+		mainPopPanel.setBackground(Color.GRAY);
+		exitPanel.setBackground(Color.GRAY);
 		JLabel msg = new JLabel(x);
 		JButton okButt = new JButton("OK");
 		mainPopPanel.add(msg, BorderLayout.CENTER);
@@ -59,7 +62,7 @@ class popupMsg extends JPanel{
 
 		Object[] y = x.toArray();
 		setLayout(new BorderLayout());
-
+		popup.setBackground(Color.GRAY);		
 		popup.setLayout(new BorderLayout(windowWidth, windowHeight));
 		popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		popup.setBounds(windowWidth, windowHeight, windowWidth, windowHeight);
@@ -68,7 +71,8 @@ class popupMsg extends JPanel{
 		JPanel mainPopPanel = new JPanel(new FlowLayout());
 		JPanel exitPanel = new JPanel(new FlowLayout());
 		String output = "";
-		
+		mainPopPanel.setBackground(Color.GRAY);
+		exitPanel.setBackground(Color.GRAY);
 		for(int count = 0; count < x.size(); count++){
 			output =  output + y[count].toString();
 		}
