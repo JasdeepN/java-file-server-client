@@ -156,7 +156,8 @@ class Client extends JPanel{
                     if (isConnected == true){
                         serverView x = new serverView();
                     } else {
-                        popupMsg x = new popupMsg("connect to server first", "server error", 400, 100);
+                        popupMsg x = new popupMsg("connect to server first",
+                           "server error", 400, 100);
                     }
                 }          
             }); 
@@ -166,7 +167,8 @@ class Client extends JPanel{
                     if (isConnected == true){
                         serverLog x = new serverLog();
                     } else {
-                        popupMsg x = new popupMsg("no logs to show - connect to a server", "server error", 400, 100);
+                        popupMsg x = new popupMsg("no logs to show - connect to a server", 
+                            "server error", 400, 100);
                     }
                 }          
             }); 
@@ -174,6 +176,8 @@ class Client extends JPanel{
 
             fileSender.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e){
+                    popupMsg x = new popupMsg("files to send must be placed in the \"user_data\" directory",
+                       "warning", 400, 100);
                     fileSender r = new fileSender();
                 }          
             }); 
@@ -207,7 +211,8 @@ class Client extends JPanel{
                         serverView.updateServer("connected");
                 //System.out.println("connect");
                     } catch (Exception x){
-                        popupMsg y = new popupMsg("Failure, is the server running?", "error", 400, 100);
+                        popupMsg y = new popupMsg("Failure, is the server running?", 
+                            "error", 400, 100);
                         serverView.updateServer("failure");
                         System.err.println("could not connect to server (is it on?)");
                     }
