@@ -31,7 +31,7 @@ class popupMsg extends JPanel{
 		final JFrame popup = new JFrame(windowName); //MAKE NAME CHANGE BASED ON CALLING METHOD (CHANGE CONSTRUCTOR)
 
 		setLayout(new BorderLayout());
-		popup.getContentPane().setBackground(Color.GRAY); //does nothing?
+		popup.getContentPane().setBackground(Color.GRAY); 
 		JPanel mainPopPanel = new JPanel(new FlowLayout());
 		JPanel exitPanel = new JPanel(new FlowLayout());
 
@@ -46,6 +46,9 @@ class popupMsg extends JPanel{
 		
 		JLabel msg = new JLabel(x);
 		JButton okButt = new JButton("OK");
+		msg.setFont(new Font("Serif", Font.BOLD, 14));
+		//label.setFont(new Font("Serif", Font.PLAIN, 14));
+
 		
 		mainPopPanel.add(msg, BorderLayout.CENTER);
 		exitPanel.add(okButt, BorderLayout.SOUTH);
