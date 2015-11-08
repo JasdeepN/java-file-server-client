@@ -15,6 +15,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.io.File;
+import java.io.IOException;
+import java.awt.Desktop;
 
 
 class fileSender extends JPanel {
@@ -81,6 +84,7 @@ class fileSender extends JPanel {
         fileFrame.setResizable(false);
 
         JButton gobackButton = new JButton("BACK"); 
+        JButton test = new JButton("test");
         JButton sendFileButton = new JButton("SEND FILE");
         JButton serverConnect = new JButton("CONNECT TO FILE SERVER");
         JButton availbutton = new JButton("SHOW FILES");
@@ -95,6 +99,7 @@ class fileSender extends JPanel {
         serverPanel.add(ipBox);
         serverPanel.add(portBox);
         exitPanel.add(gobackButton);
+        exitPanel.add(test);
         sendFilePanel.add(availbutton);
         sendFilePanel.add(fileField);
         sendFilePanel.add(sendFileButton);
@@ -119,6 +124,22 @@ class fileSender extends JPanel {
                 //System.exit(0);
                 fileFrame.dispose();
 
+            }          
+        });
+
+        test.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Desktop desktop = null;
+                // on Windows, retrieve the path of the "Program Files" folder
+                File file = new File(System.getenv("home"));
+
+                try {
+                    desktop = Desktop.getDesktop();
+                    desktop.open(file);
+
+                }catch (IOException l){ 
+                    System.err.println("didnt work");
+                }
             }          
         });
 
